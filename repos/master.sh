@@ -12,9 +12,11 @@ cfengine_master(){
 }
 
 cfengine_master core
+cfengine_master masterfiles
 cfengine_master enterprise
 cfengine_master nova
 cfengine_master mission-portal
+cfengine_master design-center
 cfengine_master buildscripts
 cfengine_master documentation
 cfengine_master documentation-generator

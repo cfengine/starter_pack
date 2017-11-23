@@ -1,7 +1,13 @@
 core
+masterfiles
 enterprise
 nova
 mission-portal
+design-center
 buildscripts
 documentation
 documentation-generator
+
+.vagrant
+
+workdir-*

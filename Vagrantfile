@@ -9,6 +9,8 @@ Vagrant.configure("2") do |config|
 
     # Run bootstrap.sh script on first boot:
     config.vm.provision "bootstrap", type: "shell", path: "bootstrap.sh"
+    config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+    config.vm.synced_folder "~/code/northern.tech", "/northern.tech", type: "virtualbox"
 
     # Performace settings for each vm:
     config.vm.provider "virtualbox" do |vb|
@@ -22,14 +24,12 @@ Vagrant.configure("2") do |config|
     # Main development machine: (No network)
     config.vm.define "dev", primary: true, autostart: false do |dev|
         config.vm.hostname = "DEV"
-        config.vm.synced_folder "~/code/northern.tech", "/northern.tech"
     end
 
     # ============================ BUILD MACHINES: ===========================
 
     config.vm.define "build", autostart: false do |build|
         config.vm.hostname = "build"
-        config.vm.synced_folder "~/code/northern.tech", "/northern.tech"
         config.vm.network "private_network", ip: "192.168.100.100"
     end
 
@@ -37,7 +37,6 @@ Vagrant.configure("2") do |config|
     config.vm.define "mingw", primary: false, autostart: false do |mingw|
         config.vm.hostname = "mingw"
         config.vm.network "private_network", ip: "192.168.200.200"
-        config.vm.synced_folder "~/code/northern.tech", "/northern.tech"
     end
 
     # ============================ TEST MACHINES: ============================
@@ -46,14 +45,12 @@ Vagrant.configure("2") do |config|
     config.vm.define "hub", autostart: false do |hub|
         config.vm.hostname = "hub"
         config.vm.network "private_network", ip: "192.168.10.10"
-        config.vm.synced_folder "~/code/northern.tech", "/northern.tech"
     end
 
     # Client test machine:
     config.vm.define "client", autostart: false do |client|
         config.vm.hostname = "client"
         config.vm.network "private_network", ip: "192.168.10.11"
-        config.vm.synced_folder "~/code/northern.tech", "/northern.tech"
     end
 
     # =============================== BASE BOX: ==============================

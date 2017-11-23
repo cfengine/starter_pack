@@ -9,9 +9,11 @@ cfengine_clone(){
 }
 
 cfengine_clone core
+cfengine_clone masterfiles
 cfengine_clone enterprise
 cfengine_clone nova
 cfengine_clone mission-portal
+cfengine_clone design-center
 cfengine_clone buildscripts
 cfengine_clone documentation
 cfengine_clone documentation-generator

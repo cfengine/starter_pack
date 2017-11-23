@@ -13,9 +13,11 @@ cfengine_rebase(){
 }
 
 cfengine_rebase core
+cfengine_rebase masterfiles
 cfengine_rebase enterprise
 cfengine_rebase nova
 cfengine_rebase mission-portal
+cfengine_rebase design-center
 cfengine_rebase buildscripts
 cfengine_rebase documentation
 cfengine_rebase documentation-generator
