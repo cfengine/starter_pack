@@ -27,9 +27,7 @@ mkdir /home/build/.ssh
 touch /home/build/.hushlogin
 
 cp /home/vagrant/.ssh/authorized_keys /home/build/.ssh/authorized_keys
-touch /vagrant/id_rsa.pub
 cat /home/vagrant/.ssh/id_rsa.pub >> /home/build/.ssh/authorized_keys
-cat /vagrant/id_rsa.pub >> /home/build/.ssh/authorized_keys
 
 chown build:build /home/build/.ssh/authorized_keys
 chmod 600 /home/build/.ssh/authorized_keys
