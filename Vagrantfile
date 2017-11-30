@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
 
     # Performace settings for each vm:
     config.vm.provider "virtualbox" do |vb|
-        vb.memory = 1024 # 1 GiB of memory
+        vb.memory = 2048 # 1 GiB of memory
         vb.cpus = 2      # 2 CPU Cores
 
         # Ensure time synchronization:
