@@ -31,7 +31,7 @@ Vagrant.configure("2") do |config|
     config.vm.define "build", autostart: false do |build|
         config.vm.hostname = "build"
         config.vm.box = "buildbox"
-        config.vm.provision "bootstrap", type: "shell", path: "buildbox/bootstrap.sh"
+        config.vm.provision "bootstrap", type: "shell", path: "bootstrap.sh"
         config.vm.network "private_network", ip: "192.168.100.100"
     end
 

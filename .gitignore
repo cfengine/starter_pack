@@ -11,3 +11,5 @@ documentation-generator
 .vagrant
 
 workdir-*
+base.box
+build.box
