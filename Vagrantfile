@@ -64,7 +64,7 @@ Vagrant.configure("2") do |config|
     end
 
     # Prepackage a box on disk:
-    config.vm.define "buildbox", autostart: false do |custombox|
+    config.vm.define "buildbox", autostart: false do |buildbox|
         config.vm.box = "ubuntu/trusty64"
         config.vm.provision "bootstrap", type: "shell", path: "buildbox/bootstrap.sh"
     end
