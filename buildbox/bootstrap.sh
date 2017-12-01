@@ -10,7 +10,11 @@ apt-get install -y libc-dev
 apt-get install -y glibc-devel
 apt-get install -y bison
 apt-get install -y flex
-apt-get install -y fakeroot
+apt-get install -y ntp
+apt-get install -y pkg-config
+apt-get install -y libpam0g-dev
+apt-get install -y ntp
+apt-get install -y dpkg-dev debhelper fakeroot
 
 # Remove unneeded packages and cache:
 apt-get -y autoremove
@@ -18,23 +22,27 @@ apt-get clean
 
 history -c
 
-apt-get -y autoremove
-
 echo '' >> /etc/ssh/ssh_config
-echo 'Host 127.0.0.1 buildmachine' >> /etc/ssh/ssh_config
+echo 'Host 127.0.0.1 buildmachine localhost' >> /etc/ssh/ssh_config
 echo '   StrictHostKeyChecking no' >> /etc/ssh/ssh_config
 echo '   UserKnownHostsFile=/dev/null' >> /etc/ssh/ssh_config
 
-ssh-keygen -t rsa -f /home/vagrant/.ssh/id_rsa -N ""
+cp /vagrant/keys/insecure.pub /home/vagrant/.ssh/id_rsa.pub
+cp /vagrant/keys/insecure /home/vagrant/.ssh/id_rsa
 chown vagrant:vagrant /home/vagrant/.ssh/id_rsa
+chown vagrant:vagrant /home/vagrant/.ssh/id_rsa.pub
 chmod 600 /home/vagrant/.ssh/id_rsa
+chmod 600 /home/vagrant/.ssh/id_rsa.pub
 
 useradd -m -s /bin/bash -U build
 mkdir /home/build/.ssh
 touch /home/build/.hushlogin
 
-cp /home/vagrant/.ssh/authorized_keys /home/build/.ssh/authorized_keys
-cat /home/vagrant/.ssh/id_rsa.pub >> /home/build/.ssh/authorized_keys
+echo "build ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+echo "" >> /etc/sudoers
+
+cp /home/vagrant/.ssh/authorized_keys /home/build/.ssh/authorized_keys # Copy over vagrant ssh key
+cat /vagrant/keys/insecure.pub >> /home/build/.ssh/authorized_keys     # Add insecure.pub
 
 chown build:build /home/build/.ssh/authorized_keys
 chmod 600 /home/build/.ssh/authorized_keys

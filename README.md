@@ -21,6 +21,8 @@ $ vagrant plugin install vagrant-vbguest
 (If you know how to use libvirt/kvm or other virtualization software, feel free to use that).
 
 ## Recommended setup
+
+### Folder structure
 Have all your Northern.tech git projects in `/northern.tech`.
 CFEngnine projects in `/northern.tech/cfengine` (similar for mender, and so on.)
 The reason to place it at root is so it can have the same absolute path on all VMs, using a mounted shared folder.
@@ -39,6 +41,16 @@ $ cd /northern.tech/cfengine/starter_pack
 ```
 
 **Note:** The `clone.sh` script clones all CFEngine repos into the current directory
+
+### SSH keys
+
+```
+bash keygen.sh
+```
+
+Will generate `./keys/insecure[.pub]`.
+This will be installed to `~/.ssh/id_rsa[.pub]` on all vagrant machines.
+`./keys/insecure.pub` is added to build user's `authorized_keys` so build-remote can work.
 
 ## Getting started with the dev machine
 The development machine has all development libraries already installed.
@@ -108,7 +120,8 @@ $ vagrant up build
 
 ### Testing ssh for build-remote
 ```
-$ ssh build@localhost
+$ vagrant ssh dev
+$ ssh build@buildmachine
 $ exit
 ```
 (Should not ask for password)
@@ -116,6 +129,6 @@ $ exit
 ### Running build-remote
 ```
 $ cd /northern.tech/cfengine/buildscripts
-$ bash build-remote --source /northern.tech/cfengine/ build@localhost
+$ bash build-remote --source /northern.tech/cfengine/ build@buildmachine
 ```
 **This does not work yet!**
