@@ -5,7 +5,7 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get install -y emacs24 git nano
 apt-get install -y ntp
-apt-get install -y gdb automake autoconf
+apt-get install -y gdb automake autoconf libtool
 apt-get install -y python-pip python3-pip
 apt-get install -y libssl-dev libpcre3 libpcre3-dev
 apt-get install -y bison libbison-dev libacl1 libacl1-dev libpq-dev

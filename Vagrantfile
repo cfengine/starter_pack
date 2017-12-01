@@ -4,7 +4,7 @@
 Vagrant.configure("2") do |config|
     # Use a custom box:
     # https://scotch.io/tutorials/how-to-create-a-vagrant-base-box-from-an-existing-one
-    config.vm.box = "custombox"
+    config.vm.box = "basebox"
     # config.vm.box = "ubuntu/trusty64"
 
     # Run bootstrap.sh script on first boot:
@@ -30,6 +30,8 @@ Vagrant.configure("2") do |config|
 
     config.vm.define "build", autostart: false do |build|
         config.vm.hostname = "build"
+        config.vm.box = "buildbox"
+        config.vm.provision "bootstrap", type: "shell", path: "buildbox/bootstrap.sh"
         config.vm.network "private_network", ip: "192.168.100.100"
     end
 
@@ -56,8 +58,14 @@ Vagrant.configure("2") do |config|
     # =============================== BASE BOX: ==============================
 
     # Prepackage a box on disk:
-    config.vm.define "custombox", autostart: false do |custombox|
+    config.vm.define "basebox", autostart: false do |custombox|
         config.vm.box = "ubuntu/trusty64"
-        config.vm.provision "bootstrap", type: "shell", path: "basebox/create.sh"
+        config.vm.provision "bootstrap", type: "shell", path: "basebox/bootstrap.sh"
+    end
+
+    # Prepackage a box on disk:
+    config.vm.define "buildbox", autostart: false do |custombox|
+        config.vm.box = "ubuntu/trusty64"
+        config.vm.provision "bootstrap", type: "shell", path: "buildbox/bootstrap.sh"
     end
 end
