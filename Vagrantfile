@@ -14,8 +14,8 @@ Vagrant.configure("2") do |config|
 
     # Performace settings for each vm:
     config.vm.provider "virtualbox" do |vb|
-        vb.memory = 2048 # 1 GiB of memory
-        vb.cpus = 2      # 2 CPU Cores
+        vb.memory = 1024 # 1 GiB of memory
+        vb.cpus = 1      # 1 CPU Cores
 
         # Ensure time synchronization:
         vb.customize [ "guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 1000 ]
@@ -24,6 +24,10 @@ Vagrant.configure("2") do |config|
     # Main development machine: (No network)
     config.vm.define "dev", primary: true, autostart: false do |dev|
         config.vm.hostname = "DEV"
+        config.vm.provider "virtualbox" do |v|
+            v.memory = 2048
+            v.cpus = 2
+        end
     end
 
     # ============================ BUILD MACHINES: ===========================
@@ -33,12 +37,20 @@ Vagrant.configure("2") do |config|
         config.vm.box = "buildslavebox"
         config.vm.provision "bootstrap", type: "shell", path: "bootstrap.sh"
         config.vm.network "private_network", ip: "192.168.100.100"
+        config.vm.provider "virtualbox" do |v|
+            v.memory = 2048
+            v.cpus = 2
+        end
     end
 
     # Dedicated mingw compile for windows machine:
     config.vm.define "mingw", primary: false, autostart: false do |mingw|
         config.vm.hostname = "mingw"
         config.vm.network "private_network", ip: "192.168.200.200"
+        config.vm.provider "virtualbox" do |v|
+            v.memory = 2048
+            v.cpus = 2
+        end
     end
 
     # ============================ TEST MACHINES: ============================
@@ -61,11 +73,19 @@ Vagrant.configure("2") do |config|
     config.vm.define "basebox", autostart: false do |custombox|
         config.vm.box = "ubuntu/trusty64"
         config.vm.provision "bootstrap", type: "shell", path: "basebox/bootstrap.sh"
+        config.vm.provider "virtualbox" do |v|
+            v.memory = 2048
+            v.cpus = 2
+        end
     end
 
     # Prepackage a box on disk:
     config.vm.define "buildslavebox", autostart: false do |buildslavebox|
         config.vm.box = "ubuntu/trusty64"
         config.vm.provision "bootstrap", type: "shell", path: "buildslave/bootstrap.sh"
+        config.vm.provider "virtualbox" do |v|
+            v.memory = 2048
+            v.cpus = 2
+        end
     end
 end

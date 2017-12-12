@@ -85,25 +85,34 @@ $ vagrant ssh dev
 $ cd /northern.tech/cfengine/core
 $ ./autogen.sh --enable-debug
 $ make -j2
+$ cd ../masterfiles
+$ ./autogen.sh --enable-debug
 ```
 
 ### Installing CFEngine Community on a test machine
-Hub:
+
+#### Hub
 ```
 $ vagrant up hub
 $ vagrant ssh hub
+$ sudo su
 $ cd /northern.tech/cfengine/core
 $ make -j2 install
-$ sudo /var/cfengine/bin/cf-agent --bootstrap 192.168.10.10
+$ cd ../masterfiles
+$ make -j2 install
+$ /var/cfengine/bin/cf-key
+$ /var/cfengine/bin/cf-agent --bootstrap 192.168.10.10
 ```
 
-Client:
+#### Client
 ```
 $ vagrant up client
 $ vagrant ssh client
+$ sudo su
 $ cd /northern.tech/cfengine/core
 $ make -j2 install
-$ sudo /var/cfengine/bin/cf-agent --bootstrap 192.168.10.10
+$ /var/cfengine/bin/cf-key
+$ /var/cfengine/bin/cf-agent --bootstrap 192.168.10.10
 ```
 
 ## build-remote on buildslave
