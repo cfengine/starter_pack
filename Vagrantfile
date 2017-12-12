@@ -10,7 +10,7 @@ Vagrant.configure("2") do |config|
     # Run bootstrap.sh script on first boot:
     config.vm.provision "bootstrap", type: "shell", path: "bootstrap.sh"
     config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
-    config.vm.synced_folder "~/code/northern.tech", "/northern.tech", type: "virtualbox"
+    config.vm.synced_folder "/northern.tech", "/northern.tech", type: "virtualbox"
 
     # Performace settings for each vm:
     config.vm.provider "virtualbox" do |vb|
