@@ -2,6 +2,7 @@
 
 CFEngine enterprise can be pretty hard/tedious to build, because of many repos and dependencies.
 This is an attempt to make it easier for new developers.
+It is by no means finished, please add GitHub Issues and Pull Requests :)
 
 ## Installing vagrant and virtualbox
 
@@ -78,6 +79,8 @@ If you ever need a clean dev machine, log out and:
 $ vagrant destroy dev
 $ vagrant up dev
 ```
+This is great, because you don't have to be careful not to mess up your dev machine.
+You can always get a new one within a minute.
 
 ### Compiling CFEngine Community in the development machine
 ```
@@ -144,3 +147,4 @@ $ exit
 $ cd /northern.tech/cfengine/buildscripts
 $ bash build-remote --verbose --source /northern.tech/cfengine/ build@buildslave
 ```
+**Note:** The `build-remote` script will put output in `/northern.tech/cfengine/output`
