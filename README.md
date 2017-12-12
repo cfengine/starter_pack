@@ -24,7 +24,7 @@ $ vagrant plugin install vagrant-vbguest
 
 ### Folder structure
 Have all your Northern.tech git projects in `/northern.tech`.
-CFEngnine projects in `/northern.tech/cfengine` (similar for mender, and so on.)
+CFEngine projects in `/northern.tech/cfengine` (similar for mender, and so on.)
 The reason to place it at root is so it can have the same absolute path on all VMs, using a mounted shared folder.
 It is not a strict requirement, it's just easier.
 If you use another path, you will have to update Vagrantfile and bash scripts.
@@ -116,6 +116,10 @@ $ /var/cfengine/bin/cf-agent --bootstrap 192.168.10.10
 ```
 
 ## build-remote on buildslave
+
+The `buildslave` machine is set up specifically for the `build-remote` script.
+This script checks that certain dependencies are installed, while others are not installed, to avoid conflicting dependencies.
+Running `build-remote` from `dev` VM to `buildslave` VM is the easiest.
 
 ### Creating a buildslave base box
 ```

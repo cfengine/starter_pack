@@ -35,6 +35,8 @@ Vagrant.configure("2") do |config|
     config.vm.define "buildslave", autostart: false do |buildslave|
         config.vm.hostname = "buildslave"
         config.vm.box = "buildslavebox"
+        config.vm.synced_folder ".", "/vagrant", type: "virtualbox", disabled: true
+        config.vm.synced_folder "~/code/northern.tech", "/northern.tech", type: "virtualbox", disabled: true
         config.vm.provision "bootstrap", type: "shell", path: "bootstrap.sh"
         config.vm.network "private_network", ip: "192.168.100.100"
         config.vm.provider "virtualbox" do |v|
