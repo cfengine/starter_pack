@@ -13,7 +13,7 @@ sed -i "/$(hostname)/d" /etc/hosts
 
 # Add buildslave entry on all machines:
 echo "" >> /etc/hosts
-grep -q -F 'buildslave' /etc/hosts || echo '192.168.100.100 buildslave' >> /etc/hosts
+grep 'buildslave' /etc/hosts || echo '192.168.100.100 buildslave' >> /etc/hosts
 echo "" >> /etc/hosts
 
 touch /home/vagrant/.bashrc
