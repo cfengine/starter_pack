@@ -6,7 +6,7 @@ touch /home/vagrant/.hushlogin
 
 # Hostname entry for buildmachine:
 touch /etc/hosts
-grep -q -F 'buildmachine' /etc/hosts || echo '192.168.100.100 buildmachine' >> /etc/hosts
+grep -q -F 'buildslave' /etc/hosts || echo '192.168.100.100 buildslave' >> /etc/hosts
 
 touch /home/vagrant/.bashrc
 touch /home/vagrant/.bash_profile

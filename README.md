@@ -56,7 +56,7 @@ This will be installed to `~/.ssh/id_rsa[.pub]` on all vagrant machines.
 The development machine has all development libraries already installed.
 It is ready to run autogen, make etc.
 It will **NOT** work with `build-remote`.
-(See the sections on the build machine below.)
+(See the sections on the buildslave machine below.)
 
 ### Creating a base box for development
 The vagrant VMs use a custom base box where some dependencies are installed.
@@ -106,22 +106,22 @@ $ make -j2 install
 $ sudo /var/cfengine/bin/cf-agent --bootstrap 192.168.10.10
 ```
 
-## WIP! Getting started with the build machine
+## build-remote on buildslave
 
-### Creating a build base box
+### Creating a buildslave base box
 ```
-$ bash ./buildbox/create.sh
+$ bash ./buildslave/create.sh
 ```
 
-### Starting the build machine
+### Starting the build slave
 ```
-$ vagrant up build
+$ vagrant up buildslave
 ```
 
 ### Testing ssh for build-remote
 ```
 $ vagrant ssh dev
-$ ssh build@buildmachine
+$ ssh build@buildslave
 $ exit
 ```
 (Should not ask for password)
@@ -129,6 +129,5 @@ $ exit
 ### Running build-remote
 ```
 $ cd /northern.tech/cfengine/buildscripts
-$ bash build-remote --source /northern.tech/cfengine/ build@buildmachine
+$ bash build-remote --verbose --source /northern.tech/cfengine/ build@buildslave
 ```
-**This does not work yet!**

@@ -28,9 +28,9 @@ Vagrant.configure("2") do |config|
 
     # ============================ BUILD MACHINES: ===========================
 
-    config.vm.define "build", autostart: false do |build|
-        config.vm.hostname = "build"
-        config.vm.box = "buildbox"
+    config.vm.define "buildslave", autostart: false do |buildslave|
+        config.vm.hostname = "buildslave"
+        config.vm.box = "buildslavebox"
         config.vm.provision "bootstrap", type: "shell", path: "bootstrap.sh"
         config.vm.network "private_network", ip: "192.168.100.100"
     end
@@ -64,8 +64,8 @@ Vagrant.configure("2") do |config|
     end
 
     # Prepackage a box on disk:
-    config.vm.define "buildbox", autostart: false do |buildbox|
+    config.vm.define "buildslavebox", autostart: false do |buildslavebox|
         config.vm.box = "ubuntu/trusty64"
-        config.vm.provision "bootstrap", type: "shell", path: "buildbox/bootstrap.sh"
+        config.vm.provision "bootstrap", type: "shell", path: "buildslave/bootstrap.sh"
     end
 end
