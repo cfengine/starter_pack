@@ -149,16 +149,28 @@ $ bash build-remote --verbose --source /northern.tech/cfengine/ build@buildslave
 ```
 **Note:** The `build-remote` script will put output in `/northern.tech/cfengine/output`
 
-## Building enterprise and nova on dev machine
+## Building CFEngine Enterprise locally
 
-Rough process:
+### Compiling core, enterprise and nova on the dev machine
+
+Using `cfbuilder.py`:
 ```
 $ vagrant up dev
 $ vagrant ssh dev
-$ cd /northern.tech/cfengine/core
-$ ./autogen.sh && make -j2
-$ cd ../enterprise
-$ ./autogen.sh && make -j2
-$ cd ../nova
-$ ./autogen.sh --with-postgresql-hub=/usr && make -j2
+$ cd /northern.tech/cfengine/starter_pack
+$ python3 cfbuilder.py --autogen --make --core --masterfiles --enterprise --nova
 ```
+
+The individual steps:
+```
+$ python3 cfbuilder.py --autogen --make --core --enterprise --nova --dry-run
+
+These commands would run if you didn't specify --dry-run:
+cd /northern.tech/cfengine && cd core && ./autogen.sh --enable-debug
+cd /northern.tech/cfengine && cd core && make -j2
+cd /northern.tech/cfengine && cd enterprise && ./autogen.sh --enable-debug
+cd /northern.tech/cfengine && cd enterprise && make -j2
+cd /northern.tech/cfengine && cd nova && ./autogen.sh --enable-debug --with-postgresql-hub=/usr
+cd /northern.tech/cfengine && cd nova && make -j2
+```
+(You can run the steps without using `cfbuilder.py`, simplify the `cd` commands if you'd like)
