@@ -13,6 +13,9 @@ apt-get install -y lmdb-utils liblmdb-dev libpam0g-dev flex
 apt-get install -y libtokyocabinet-dev
 apt-get install -y unzip
 
+# Nova deps:
+apt-get install -y postgresql libpq-dev libpgtypes3 libecpg-dev libhiredis-dev libldap2-de php5-dev
+
 # mingw cross compile deps:
 apt-get install -y dpkg-dev debhelper g++ libncurses5 pkg-config build-essential libpam0g-dev mingw-w64
 
