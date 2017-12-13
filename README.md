@@ -174,3 +174,22 @@ cd /northern.tech/cfengine && cd nova && ./autogen.sh --enable-debug --with-post
 cd /northern.tech/cfengine && cd nova && make -j2
 ```
 (You can run the steps without using `cfbuilder.py`, simplify the `cd` commands if you'd like)
+
+### WIP! Installing nova on a test machine
+
+In general, don't install on your dev machine, and don't run sudo commands on the dev machine.
+Everything you're doing there should work without sudo.
+Use the `hub` and `client` machines to install and bootstrap.
+
+After compiling on `dev` machine, use `cfbuilder.py` to install on `hub`:
+```
+$ vagrant up hub
+$ vagrant ssh hub
+$ sudo su
+$ cd /northern.tech/cfengine/starter_pack
+$ python3 cfbuilder.py --install --all-repos
+$ /var/cfengine/bin/cf-key
+$ redis-server ../nova/tests/reporting/redis.conf
+$ /var/cfengine/bin/cf-agent --bootstrap 192.168.10.10
+```
+(Use `--dry-run` to see the individual steps)
