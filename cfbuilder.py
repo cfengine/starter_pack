@@ -73,6 +73,8 @@ def get_repos(args):
         repos += args.repos
     if args.core or _all:
         repos.append("core")
+    if args.masterfiless or _all:
+        repos.append("masterfiless")
     if args.enterprise or _all:
         repos.append("enterprise")
     if args.nova or _all:
@@ -100,10 +102,11 @@ def get_args():
     ap.add_argument("--steps",   help="Steps (commands) to run", nargs="+")
 
     # REPOS:
-    ap.add_argument("--core",       help="Add core to --repos",       action="store_true")
-    ap.add_argument("--enterprise", help="Add enterprise to --repos", action="store_true")
-    ap.add_argument("--nova",       help="Add nova to --repos",       action="store_true")
-    ap.add_argument("--repos",      help="Repositories to run commands in", nargs="+")
+    ap.add_argument("--core",        help="Add core to --repos",        action="store_true")
+    ap.add_argument("--masterfiles", help="Add masterfiles to --repos", action="store_true")
+    ap.add_argument("--enterprise",  help="Add enterprise to --repos",  action="store_true")
+    ap.add_argument("--nova",        help="Add nova to --repos",        action="store_true")
+    ap.add_argument("--repos",       help="Repositories to run commands in", nargs="+")
 
     # SOURCE:
     ap.add_argument("--source", "-d", help="Where to look for CFEngine sources", type=str, default=cfengine_path)
