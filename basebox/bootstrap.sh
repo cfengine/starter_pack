@@ -15,9 +15,12 @@ apt-get install -y libtokyocabinet-dev
 apt-get install -y unzip
 
 # Nova deps:
-echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list
-wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | apt-key add -
-apt-get install -y postgresql postgresql-contrib libpq-dev pgadmin3
+echo 'deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' >> /etc/apt/sources.list.d/pgdg.list
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
+  sudo apt-key add -
+sudo apt-get update
+
+apt-get install -y postgresql-9.6 postgresql-contrib libpq-dev pgadmin3
 apt-get install -y libpgtypes3 libecpg-dev libhiredis-dev libldap2-dev php5-dev
 apt-get install -y redis-server
 
@@ -26,7 +29,7 @@ apt-get install -y dpkg-dev debhelper g++ libncurses5 pkg-config build-essential
 
 # Remove unneeded packages and cache:
 apt-get -y autoremove
-apt-get clean
+apt-get -y clean
 
 cp /vagrant/keys/insecure.pub /home/vagrant/.ssh/id_rsa.pub
 cp /vagrant/keys/insecure /home/vagrant/.ssh/id_rsa
