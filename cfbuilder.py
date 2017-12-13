@@ -41,10 +41,7 @@ def perform_step(step, repo, source):
     cmd = "cd {source} && cd {repo} && {command}".format(source=source,
                                                          repo=repo,
                                                          command=command)
-    if step == "install" and repo == "nova":
-        log.info("Skipping: {}".format(cmd))
-    else:
-        run_cmd(cmd)
+    run_cmd(cmd)
 
 def build(steps, repos, source):
     for repo in repos:
@@ -63,7 +60,7 @@ def get_steps(args):
     if args.install:
         steps.append("install")
     if not steps:
-        user_error("No build steps specified")
+        user_error("No build steps specified, see --help")
     return steps
 
 def get_repos(args):
