@@ -60,7 +60,7 @@ def get_steps(args):
         steps.append("autogen")
     if args.make or _all:
         steps.append("make")
-    if args.install or _all:
+    if args.install:
         steps.append("install")
     if not steps:
         user_error("No build steps specified")
@@ -73,8 +73,8 @@ def get_repos(args):
         repos += args.repos
     if args.core or _all:
         repos.append("core")
-    if args.masterfiless or _all:
-        repos.append("masterfiless")
+    if args.masterfiles or _all:
+        repos.append("masterfiles")
     if args.enterprise or _all:
         repos.append("enterprise")
     if args.nova or _all:
@@ -91,14 +91,14 @@ def get_args():
     cfengine_path     = os.path.dirname(buildscripts_path)
 
     # ALL:
-    ap.add_argument("--all", "-a", help="Run all steps on all repos",       action="store_true")
-    ap.add_argument("--all-repos", help="Run specified steps on all repos", action="store_true")
-    ap.add_argument("--all-steps", help="Run all steps on specified repos", action="store_true")
+    ap.add_argument("--all", "-a", help="Run most steps on all repos",       action="store_true")
+    ap.add_argument("--all-repos", help="Run specified steps on all repos",  action="store_true")
+    ap.add_argument("--all-steps", help="Run most steps on specified repos", action="store_true")
 
     # STEPS:
     ap.add_argument("--autogen", help="Run autogen step", action="store_true")
     ap.add_argument("--make",    help="Run make step",    action="store_true")
-    ap.add_argument("--install", help="Run install step", action="store_true")
+    ap.add_argument("--install", help="Run install step (not in --all, add explicitly)", action="store_true")
     ap.add_argument("--steps",   help="Steps (commands) to run", nargs="+")
 
     # REPOS:
