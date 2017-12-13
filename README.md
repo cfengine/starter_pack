@@ -148,3 +148,17 @@ $ cd /northern.tech/cfengine/buildscripts
 $ bash build-remote --verbose --source /northern.tech/cfengine/ build@buildslave
 ```
 **Note:** The `build-remote` script will put output in `/northern.tech/cfengine/output`
+
+## Building enterprise and nova on dev machine
+
+Rough process:
+```
+$ vagrant up dev
+$ vagrant ssh dev
+$ cd /northern.tech/cfengine/core
+$ ./autogen.sh && make -j2
+$ cd ../enterprise
+$ ./autogen.sh && make -j2
+$ cd ../nova
+$ ./autogen.sh --with-postgresql-hub=/usr && make -j2
+```
