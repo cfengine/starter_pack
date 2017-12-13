@@ -8,13 +8,22 @@ import logging
 
 log = logging.getLogger(__name__)
 
+dry_run = False
+
 def user_error(msg):
     log.error(msg)
     sys.exit(1)
 
 def run_cmd(cmd):
+    if dry_run:
+        print(cmd)
+        return
     print("Running: {}".format(cmd))
-    os.system(cmd)
+    r = os.system(cmd)
+    if r != 0:
+        print("Command:   {}".format(cmd))
+        print("Exit code: {}".format(r))
+        sys.exit(r)
 
 def perform_step(step, repo, source):
     command = ""
@@ -38,8 +47,8 @@ def perform_step(step, repo, source):
         run_cmd(cmd)
 
 def build(steps, repos, source):
-    for step in steps:
-        for repo in repos:
+    for repo in repos:
+        for step in steps:
             perform_step(step,repo,source)
 
 def get_steps(args):
@@ -107,7 +116,15 @@ def get_args():
     ap.add_argument("--debug",   help="Build in debug mode",   action="store_true")
     ap.add_argument("--release", help="Build in release mode", action="store_true")
 
+    # MISC:
+    ap.add_argument("--dry-run", help="Show commands to be run", action="store_true")
+
     args = ap.parse_args()
+
+    if args.dry_run:
+        global dry_run
+        dry_run = True
+        print("\nThese commands would run if you didn't specify --dry-run:")
 
     if args.info:
         log.setLevel(logging.INFO)
