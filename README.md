@@ -175,7 +175,7 @@ cd /northern.tech/cfengine && cd nova && make -j2
 ```
 (You can run the steps without using `cfbuilder.py`, simplify the `cd` commands if you'd like)
 
-### WIP! Installing nova on a test machine
+### WIP! Installing CFEngine on hub machine
 
 In general, don't install on your dev machine, and don't run sudo commands on the dev machine.
 Everything you're doing there should work without sudo.
@@ -189,7 +189,8 @@ $ sudo su
 $ cd /northern.tech/cfengine/starter_pack
 $ python3 cfbuilder.py --install --all-repos
 $ /var/cfengine/bin/cf-key
-$ redis-server ../nova/tests/reporting/redis.conf
+$ bash initdb.sh
 $ /var/cfengine/bin/cf-agent --bootstrap 192.168.10.10
 ```
-(Use `--dry-run` to see the individual steps)
+
+### WIP! Running no-install reporting test
