@@ -21,8 +21,12 @@ wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
 sudo apt-get update
 
 apt-get install -y postgresql-9.6 postgresql-contrib libpq-dev pgadmin3
-apt-get install -y libpgtypes3 libecpg-dev libhiredis-dev libldap2-dev php5-dev
+apt-get install -y libpgtypes3 libecpg-dev libhiredis-dev libldap2-dev
 apt-get install -y redis-server
+apt-get install -y python-software-properties
+add-apt-repository -y ppa:ondrej/php
+apt-get update
+apt-get install -y php7.0-dev
 
 # mingw cross compile deps:
 apt-get install -y dpkg-dev debhelper g++ libncurses5 pkg-config build-essential libpam0g-dev mingw-w64

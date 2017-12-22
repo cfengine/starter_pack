@@ -60,13 +60,13 @@ Vagrant.configure("2") do |config|
     # Hub test machine:
     config.vm.define "hub", autostart: false do |hub|
         config.vm.hostname = "hub"
-        config.vm.network "private_network", ip: "192.168.10.10"
+        config.vm.network "private_network", ip: "192.168.80.90"
     end
 
     # Client test machine:
     config.vm.define "client", autostart: false do |client|
         config.vm.hostname = "client"
-        config.vm.network "private_network", ip: "192.168.10.11"
+        config.vm.network "private_network", ip: "192.168.80.91"
     end
 
     # =============================== BASE BOX: ==============================

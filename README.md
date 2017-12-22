@@ -104,7 +104,7 @@ $ make -j2 install
 $ cd ../masterfiles
 $ make -j2 install
 $ /var/cfengine/bin/cf-key
-$ /var/cfengine/bin/cf-agent --bootstrap 192.168.10.10
+$ /var/cfengine/bin/cf-agent --bootstrap 192.168.80.90
 ```
 
 #### Client
@@ -115,7 +115,7 @@ $ sudo su
 $ cd /northern.tech/cfengine/core
 $ make -j2 install
 $ /var/cfengine/bin/cf-key
-$ /var/cfengine/bin/cf-agent --bootstrap 192.168.10.10
+$ /var/cfengine/bin/cf-agent --bootstrap 192.168.80.90
 ```
 
 ## build-remote on buildslave
@@ -190,7 +190,7 @@ $ cd /northern.tech/cfengine/starter_pack
 $ python3 cfbuilder.py --install --all-repos
 $ /var/cfengine/bin/cf-key
 $ bash initdb.sh
-$ /var/cfengine/bin/cf-agent --bootstrap 192.168.10.10
+$ /var/cfengine/bin/cf-agent --bootstrap 192.168.80.90
 ```
 
 ### WIP! Running no-install reporting test
