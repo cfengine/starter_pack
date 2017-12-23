@@ -25,14 +25,18 @@ def run_cmd(cmd):
         print("Exit code: {}".format(r))
         sys.exit(r)
 
-def perform_step(step, repo, source):
+def perform_step(step, repo, source, warnings):
     command = ""
-    if step == "autogen":
+    if step == "clean":
+        command = "make clean"
+    elif step == "autogen":
         command = "./autogen.sh --enable-debug"
         if repo == "nova":
             command = "./autogen.sh --enable-debug --with-postgresql-hub=/usr"
     elif step == "make":
         command = "make -j2"
+        if warnings:
+            command = "make -j2 CFLAGS=-Werror" # TODO: Default to this
     elif step == "install":
         command = "make -j2 install"
     else:
@@ -43,19 +47,21 @@ def perform_step(step, repo, source):
                                                          command=command)
     run_cmd(cmd)
 
-def build(steps, repos, source):
+def build(steps, repos, source, warnings):
     for repo in repos:
         for step in steps:
-            perform_step(step,repo,source)
+            perform_step(step,repo,source, warnings)
 
 def get_steps(args):
     steps = []
-    _all = args.all or args.all_steps
-    if args.steps and not _all:
+    build = args.build or args.build_all
+    if args.steps:
         steps += args.steps
-    if args.autogen or _all:
+    if args.clean:
+        steps.append("clean")
+    if args.autogen or build:
         steps.append("autogen")
-    if args.make or _all:
+    if args.make or build:
         steps.append("make")
     if args.install:
         steps.append("install")
@@ -65,7 +71,7 @@ def get_steps(args):
 
 def get_repos(args):
     repos = []
-    _all = args.all or args.all_repos
+    _all = args.build_all or args.all_repos
     if args.repos and not _all:
         repos += args.repos
     if args.core or _all:
@@ -88,14 +94,15 @@ def get_args():
     cfengine_path     = os.path.dirname(buildscripts_path)
 
     # ALL:
-    ap.add_argument("--all", "-a", help="Run most steps on all repos",       action="store_true")
-    ap.add_argument("--all-repos", help="Run specified steps on all repos",  action="store_true")
-    ap.add_argument("--all-steps", help="Run most steps on specified repos", action="store_true")
+    ap.add_argument("--build-all", help="Equiv: --build --all-repos", action="store_true")
+    ap.add_argument("--all-repos", help="Equiv: --core --masterfiles --enterprise --nova", action="store_true")
+    ap.add_argument("--build",     help="Equiv: --autogen --make", action="store_true")
 
     # STEPS:
+    ap.add_argument("--clean",   help="Run clean step",   action="store_true")
     ap.add_argument("--autogen", help="Run autogen step", action="store_true")
     ap.add_argument("--make",    help="Run make step",    action="store_true")
-    ap.add_argument("--install", help="Run install step (not in --all, add explicitly)", action="store_true")
+    ap.add_argument("--install", help="Run install step", action="store_true")
     ap.add_argument("--steps",   help="Steps (commands) to run", nargs="+")
 
     # REPOS:
@@ -118,6 +125,7 @@ def get_args():
 
     # MISC:
     ap.add_argument("--dry-run", help="Show commands to be run", action="store_true")
+    ap.add_argument("--warnings", help="WIP: -Werror", action="store_true")
 
     args = ap.parse_args()
 
@@ -142,4 +150,4 @@ if __name__ == "__main__":
     log.setLevel(logging.WARNING)
     args = get_args()
     steps, repos = get_steps(args), get_repos(args)
-    build(steps, repos, args.source)
+    build(steps, repos, args.source, args.warnings)

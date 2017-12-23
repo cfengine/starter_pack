@@ -163,7 +163,7 @@ $ python3 cfbuilder.py --autogen --make --core --masterfiles --enterprise --nova
 
 The individual steps:
 ```
-$ python3 cfbuilder.py --autogen --make --core --enterprise --nova --dry-run
+$ python3 cfbuilder.py --build-all --dry-run
 
 These commands would run if you didn't specify --dry-run:
 cd /northern.tech/cfengine && cd core && ./autogen.sh --enable-debug
