@@ -37,7 +37,6 @@ Vagrant.configure("2") do |config|
         config.vm.box = "buildslavebox"
         config.vm.synced_folder ".", "/vagrant", type: "virtualbox", disabled: true
         config.vm.synced_folder "~/code/northern.tech", "/northern.tech", type: "virtualbox", disabled: true
-        config.vm.provision "bootstrap", type: "shell", path: "bootstrap.sh"
         config.vm.network "private_network", ip: "192.168.100.100"
         config.vm.provider "virtualbox" do |v|
             v.memory = 2048
@@ -69,10 +68,17 @@ Vagrant.configure("2") do |config|
         config.vm.network "private_network", ip: "192.168.80.91"
     end
 
+    # Clean test machine:
+    config.vm.define "clean", autostart: false do |clean|
+        config.vm.box = "ubuntu/trusty64"
+        config.vm.hostname = "clean"
+        config.vm.network "private_network", ip: "192.168.80.92"
+    end
+
     # =============================== BASE BOX: ==============================
 
     # Prepackage a box on disk:
-    config.vm.define "basebox", autostart: false do |custombox|
+    config.vm.define "basebox", autostart: false do |basebox|
         config.vm.box = "ubuntu/trusty64"
         config.vm.provision "bootstrap", type: "shell", path: "basebox/bootstrap.sh"
         config.vm.provider "virtualbox" do |v|
