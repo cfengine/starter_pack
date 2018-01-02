@@ -27,7 +27,9 @@ def run_cmd(cmd):
 
 def perform_step(step, repo, source, warnings):
     command = ""
-    if step == "clean":
+    if "git checkout" in step:
+        command = step
+    elif step == "clean":
         command = "make clean"
     elif step == "autogen":
         command = "./autogen.sh --enable-debug"
@@ -57,6 +59,8 @@ def get_steps(args):
     build = args.build or args.build_all
     if args.steps:
         steps += args.steps
+    if args.checkout:
+        steps.append("git checkout {}".format(args.checkout))
     if args.clean:
         steps.append("clean")
     if args.autogen or build:
@@ -99,6 +103,7 @@ def get_args():
     ap.add_argument("--build",     help="Equiv: --autogen --make", action="store_true")
 
     # STEPS:
+    ap.add_argument("--checkout",help="Switch git branch",type=str)
     ap.add_argument("--clean",   help="Run clean step",   action="store_true")
     ap.add_argument("--autogen", help="Run autogen step", action="store_true")
     ap.add_argument("--make",    help="Run make step",    action="store_true")
