@@ -114,6 +114,7 @@ Vagrant.configure("2") do |config|
     config.vm.define "hub", autostart: false do |hub|
         config.vm.hostname = "hub"
         config.vm.network "private_network", ip: "192.168.80.90"
+        config.vm.network :forwarded_port, guest: 443, host: 9002
     end
 
     # Client test machine:
