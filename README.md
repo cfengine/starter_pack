@@ -24,7 +24,16 @@ $ vagrant plugin install vagrant-vbguest
 ## Recommended setup
 
 ### Folder structure
-Have all your Northern.tech git projects in `/northern.tech`.
+
+Have all your Northern.tech git projects in `/northern.tech`. Or export
+`NT_ROOT` with the path to your base folder.
+
+For example:
+
+```
+export NT_ROOT="$HOME/Northern.Tech"
+```
+
 CFEngine projects in `/northern.tech/cfengine` (similar for mender, and so on.)
 The reason to place it at root is so it can have the same absolute path on all VMs, using a mounted shared folder.
 It is not a strict requirement, it's just easier.
@@ -32,13 +41,12 @@ If you use another path, you will have to update Vagrantfile and bash scripts.
 
 Something like this does the job:
 ```
-$ sudo mkdir /northern.tech
-$ sudo mkdir /northern.tech/cfengine
-$ cd /northern.tech/cfengine
-$ git clone git@github.com:olehermanse/cfengine_starter_pack.git
-$ mv cfengine_starter_pack starter_pack
-$ bash /northern.tech/cfengine/starter_pack/repos/clone.sh
-$ cd /northern.tech/cfengine/starter_pack
+$ export NT_ROOT=/northern.tech
+$ sudo mkdir -p $NT_ROOT/cfengine
+$ cd $NT_ROOT/cfengine
+$ git clone git@github.com:cfengine/starter_pack.git
+$ bash ./starter_pack/repos/clone.sh
+$ cd starter_pack
 ```
 
 **Note:** The `clone.sh` script clones all CFEngine repos into the current directory

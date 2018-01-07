@@ -1,6 +1,12 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+if ENV['NT_ROOT']
+  NT_ROOT=ENV['NT_ROOT']
+else
+  NT_ROOT="/northern.tech"
+end
+
 Vagrant.configure("2") do |config|
     # Use a custom box:
     # https://scotch.io/tutorials/how-to-create-a-vagrant-base-box-from-an-existing-one
@@ -10,7 +16,7 @@ Vagrant.configure("2") do |config|
     # Run bootstrap.sh script on first boot:
     config.vm.provision "bootstrap", type: "shell", path: "bootstrap.sh"
     config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
-    config.vm.synced_folder "/northern.tech", "/northern.tech", type: "virtualbox"
+    config.vm.synced_folder "#{NT_ROOT}", "/northern.tech", type: "virtualbox"
 
     # Performace settings for each vm:
     config.vm.provider "virtualbox" do |vb|
@@ -32,11 +38,27 @@ Vagrant.configure("2") do |config|
 
     # ============================ BUILD MACHINES: ===========================
 
+    config.vm.define "docbuildslave", autostart: false do |docbuildslave|
+      config.vm.hostname = "docbuildslave"
+      config.vm.box = "bento/ubuntu-16.04"
+      config.vm.synced_folder ".", "/vagrant", type: "virtualbox", disabled: false
+      config.vm.synced_folder "#{NT_ROOT}", "/northern.tech", type: "virtualbox", disabled: false
+      config.vm.network "private_network", ip: "192.168.100.100"
+      config.vm.provision "shell",
+                          name: "Installing Jekyll and the CFEngine documentation tool-chain",
+                          privileged: false,
+                          path: "#{NT_ROOT}/cfengine/documentation-generator/_scripts/provisioning-install-build-tool-chain.sh"
+      config.vm.provider "virtualbox" do |v|
+        v.memory = 2048
+        v.cpus = 2
+      end
+    end
+
     config.vm.define "buildslave", autostart: false do |buildslave|
         config.vm.hostname = "buildslave"
         config.vm.box = "buildslavebox"
         config.vm.synced_folder ".", "/vagrant", type: "virtualbox", disabled: true
-        config.vm.synced_folder "~/code/northern.tech", "/northern.tech", type: "virtualbox", disabled: true
+        config.vm.synced_folder "#{NT_ROOT}", "/northern.tech", type: "virtualbox", disabled: true
         config.vm.network "private_network", ip: "192.168.100.100"
         config.vm.provider "virtualbox" do |v|
             v.memory = 2048
