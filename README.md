@@ -202,3 +202,39 @@ $ /var/cfengine/bin/cf-agent --bootstrap 192.168.80.90
 ```
 
 ### WIP! Running no-install reporting test
+
+## docs.cfengine.com
+
+The documentation is built with Jekyll and some custom tooling. Some very
+specific tool versions are supported.
+
+- [cfengine/documentation](https://github.com/cfengine/documentation)
+- [cfengine/documentation-generator](https://github.com/cfengine/documentation-generator)
+
+### Bring up build host
+
+```
+vagrant up docbuildslave
+```
+
+During provisioning it runs `_scripts/provisioning-install-build-tool-chain.sh`
+
+To perform a build log into docbuildslave and run `starter_pack/build-docs.sh`
+from the documentation-generator repository.
+
+```
+vagrant ssh docbuildslave
+vagrant@docbuildslave ~ $ bash /northern.tech/cfengine/documentation-generator/_scripts/starter_pack-build-docs.sh
+```
+Browse the site in `$NT_ROOT/cfengine/documentation-generator/_site/index.html`
+
+### Notes and TODOs
+
+The .git subdirectories get deleted during `_run_jekyll.sh` but I don't know
+why. Perhaps something to do with jenkins. So you will want to keep a separate
+repo and sync your changes to it.
+
+```
+rsync -avz $NT_ROOT/cfengine/documentation $HOME/CFEngine/documentation/
+```
+
