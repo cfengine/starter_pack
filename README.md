@@ -24,7 +24,16 @@ $ vagrant plugin install vagrant-vbguest
 ## Recommended setup
 
 ### Folder structure
-Have all your Northern.tech git projects in `/northern.tech`.
+
+Have all your Northern.tech git projects in `/northern.tech`. Or export
+`NT_ROOT` with the path to your base folder.
+
+For example:
+
+```
+export NT_ROOT="$HOME/Northern.Tech"
+```
+
 CFEngine projects in `/northern.tech/cfengine` (similar for mender, and so on.)
 The reason to place it at root is so it can have the same absolute path on all VMs, using a mounted shared folder.
 It is not a strict requirement, it's just easier.
@@ -32,13 +41,12 @@ If you use another path, you will have to update Vagrantfile and bash scripts.
 
 Something like this does the job:
 ```
-$ sudo mkdir /northern.tech
-$ sudo mkdir /northern.tech/cfengine
-$ cd /northern.tech/cfengine
-$ git clone git@github.com:olehermanse/cfengine_starter_pack.git
-$ mv cfengine_starter_pack starter_pack
-$ bash /northern.tech/cfengine/starter_pack/repos/clone.sh
-$ cd /northern.tech/cfengine/starter_pack
+$ export NT_ROOT=/northern.tech
+$ sudo mkdir -p $NT_ROOT/cfengine
+$ cd $NT_ROOT/cfengine
+$ git clone git@github.com:cfengine/starter_pack.git
+$ bash ./starter_pack/repos/clone.sh
+$ cd starter_pack
 ```
 
 **Note:** The `clone.sh` script clones all CFEngine repos into the current directory
@@ -194,3 +202,39 @@ $ /var/cfengine/bin/cf-agent --bootstrap 192.168.80.90
 ```
 
 ### WIP! Running no-install reporting test
+
+## docs.cfengine.com
+
+The documentation is built with Jekyll and some custom tooling. Some very
+specific tool versions are supported.
+
+- [cfengine/documentation](https://github.com/cfengine/documentation)
+- [cfengine/documentation-generator](https://github.com/cfengine/documentation-generator)
+
+### Bring up build host
+
+```
+vagrant up docbuildslave
+```
+
+During provisioning it runs `_scripts/provisioning-install-build-tool-chain.sh`
+
+To perform a build log into docbuildslave and run `starter_pack/build-docs.sh`
+from the documentation-generator repository.
+
+```
+vagrant ssh docbuildslave
+vagrant@docbuildslave ~ $ bash /northern.tech/cfengine/documentation-generator/_scripts/starter_pack-build-docs.sh
+```
+Browse the site in `$NT_ROOT/cfengine/documentation-generator/_site/index.html`
+
+### Notes and TODOs
+
+The .git subdirectories get deleted during `_run_jekyll.sh` but I don't know
+why. Perhaps something to do with jenkins. So you will want to keep a separate
+repo and sync your changes to it.
+
+```
+rsync -avz $NT_ROOT/cfengine/documentation $HOME/CFEngine/documentation/
+```
+
