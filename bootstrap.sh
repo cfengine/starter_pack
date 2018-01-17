@@ -8,8 +8,8 @@ touch /home/vagrant/.hushlogin
 touch /etc/hosts
 
 # Remove entries created by vagrant:
-sed -i '/buildslave/d' /etc/hosts
-sed -i "/$(hostname)/d" /etc/hosts
+# sed -i '/buildslave/d' /etc/hosts
+# sed -i "/$(hostname)/d" /etc/hosts
 
 # Add buildslave entry on all machines:
 echo "" >> /etc/hosts

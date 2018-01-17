@@ -18,14 +18,13 @@ apt-get install -y unzip
 echo 'deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' >> /etc/apt/sources.list.d/pgdg.list
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
   sudo apt-key add -
-sudo apt-get update
+apt-get update
 
 apt-get purge -y postgresql-10
 rm -f /usr/bin/psql
 
 apt-get install -y postgresql-9.6 postgresql-contrib-9.6 # libpq-dev pgadmin3
 apt-get install -y libpgtypes3 libecpg-dev libhiredis-dev libldap2-dev
-apt-get install -y redis-server
 apt-get install -y python-software-properties
 add-apt-repository -y ppa:ondrej/php
 apt-get update
@@ -38,6 +37,14 @@ apt-get install -y dpkg-dev debhelper g++ libncurses5 pkg-config build-essential
 apt-get -y autoremove
 apt-get -y clean
 
+mkdir /root/redis && cd /root/redis || exit 1
+wget http://download.redis.io/releases/redis-3.2.11.tar.gz
+tar xzf redis-3.2.11.tar.gz
+cd redis-3.2.11 || exit 1
+make
+make install
+
+mkdir -p /home/vagrant/.ssh
 cp /vagrant/keys/insecure.pub /home/vagrant/.ssh/id_rsa.pub
 cp /vagrant/keys/insecure /home/vagrant/.ssh/id_rsa
 chown vagrant:vagrant /home/vagrant/.ssh/id_rsa

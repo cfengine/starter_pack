@@ -29,10 +29,11 @@ Vagrant.configure("2") do |config|
 
     # Main development machine: (No network)
     config.vm.define "dev", primary: true, autostart: false do |dev|
-        config.vm.hostname = "DEV"
+        config.vm.hostname = "dev"
         config.vm.provider "virtualbox" do |v|
-            v.memory = 2048
+            v.memory = 4096
             v.cpus = 2
+            v.customize ["modifyvm", :id, "--vram", "16"]
         end
     end
 
