@@ -29,12 +29,13 @@ Vagrant.configure("2") do |config|
 
     # Main development machine: (No network)
     config.vm.define "dev", primary: true, autostart: false do |dev|
-        config.vm.hostname = "dev"
-        config.vm.provider "virtualbox" do |v|
-            v.memory = 4096
-            v.cpus = 2
-            v.customize ["modifyvm", :id, "--vram", "16"]
-        end
+      config.vm.hostname = "dev"
+      config.vm.network "private_network", ip: "192.168.100.10"
+      config.vm.provider "virtualbox" do |v|
+        v.memory = 4096
+        v.cpus = 2
+        v.customize ["modifyvm", :id, "--vram", "16"]
+      end
     end
 
     # ============================ BUILD MACHINES: ===========================
@@ -44,7 +45,7 @@ Vagrant.configure("2") do |config|
       config.vm.box = "bento/ubuntu-16.04"
       config.vm.synced_folder ".", "/vagrant", type: "virtualbox", disabled: false
       config.vm.synced_folder "#{NT_ROOT}", "/northern.tech", type: "virtualbox", disabled: false
-      config.vm.network "private_network", ip: "192.168.100.100"
+      config.vm.network "private_network", ip: "192.168.100.101"
       config.vm.provision "shell",
                           name: "Installing Jekyll and the CFEngine documentation tool-chain",
                           privileged: false,
