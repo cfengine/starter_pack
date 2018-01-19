@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+set -e
+set -x
+
 vagrant destroy -f basebox
 vagrant box update basebox
 vagrant up basebox

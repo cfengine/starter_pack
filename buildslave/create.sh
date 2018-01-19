@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+set -e
+set -x
+
 vagrant destroy -f buildslavebox
 vagrant box update buildslavebox
 vagrant up buildslavebox
