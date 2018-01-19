@@ -135,6 +135,7 @@ Vagrant.configure("2") do |config|
     config.vm.define "basebox", autostart: false do |basebox|
         config.vm.box = "ubuntu/trusty64"
         config.vm.provision "bootstrap", type: "shell", path: "basebox/bootstrap.sh"
+        config.ssh.insert_key = false
         config.vm.provider "virtualbox" do |v|
             v.memory = 2048
             v.cpus = 2
@@ -150,6 +151,7 @@ Vagrant.configure("2") do |config|
     config.vm.define "buildslavebox", autostart: false do |buildslavebox|
         config.vm.box = "ubuntu/trusty64"
         config.vm.provision "bootstrap", type: "shell", path: "buildslave/bootstrap.sh"
+        config.ssh.insert_key = false
         config.vm.provider "virtualbox" do |v|
             v.memory = 2048
             v.cpus = 2
