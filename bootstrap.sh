@@ -3,6 +3,7 @@
 # Remove welcome message:
 touch /root/.hushlogin
 touch /home/vagrant/.hushlogin
+chown vagrant:vagrant /home/vagrant/.hushlogin
 
 # Manipulate hostnames to make sure localhost and buildslave names are correct:
 touch /etc/hosts
@@ -16,10 +17,12 @@ echo "" >> /etc/hosts
 grep 'buildslave' /etc/hosts || echo '192.168.100.100 buildslave' >> /etc/hosts
 echo "" >> /etc/hosts
 
-touch /home/vagrant/.bashrc
-touch /home/vagrant/.bash_profile
 touch /root/.bashrc
 touch /root/.bash_profile
+touch /home/vagrant/.bashrc
+touch /home/vagrant/.bash_profile
+chown vagrant:vagrant /home/vagrant/.bashrc
+chown vagrant:vagrant /home/vagrant/.bash_profile
 
 # Replace prompt
 grep -q -F 'export PS1="\u@\h \W $ "' /home/vagrant/.bashrc       || echo 'export PS1="\u@\h \W $ "' >> /home/vagrant/.bashrc
