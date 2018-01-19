@@ -38,7 +38,7 @@ useradd -m -s /bin/bash -U build
 mkdir /home/build/.ssh
 touch /home/build/.hushlogin
 
-echo "build ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+echo "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 echo "" >> /etc/sudoers
 
 cp /home/vagrant/.ssh/authorized_keys /home/build/.ssh/authorized_keys # Copy over vagrant ssh key
