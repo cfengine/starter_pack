@@ -15,8 +15,10 @@ Vagrant.configure("2") do |config|
 
     # Run bootstrap.sh script on first boot:
     config.vm.provision "bootstrap", type: "shell", path: "bootstrap.sh"
-    config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
-    config.vm.synced_folder "#{NT_ROOT}", "/northern.tech", type: "virtualbox"
+    config.vm.synced_folder  ".", "/vagrant",
+                             rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
+    config.vm.synced_folder "#{NT_ROOT}", "/northern.tech",
+                            rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
 
     # Performace settings for each vm:
     config.vm.provider "virtualbox" do |vb|
@@ -51,8 +53,10 @@ Vagrant.configure("2") do |config|
     config.vm.define "docbuildslave", autostart: false do |docbuildslave|
       config.vm.hostname = "docbuildslave"
       config.vm.box = "bento/ubuntu-16.04"
-      config.vm.synced_folder ".", "/vagrant", type: "virtualbox", disabled: false
-      config.vm.synced_folder "#{NT_ROOT}", "/northern.tech", type: "virtualbox", disabled: false
+      config.vm.synced_folder ".", "/vagrant", disabled: false,
+                              rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
+      config.vm.synced_folder "#{NT_ROOT}", "/northern.tech", disabled: false,
+                              rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
       config.vm.network "private_network", ip: "192.168.100.101"
       config.vm.provision "shell",
                           name: "Installing Jekyll and the CFEngine documentation tool-chain",
@@ -72,8 +76,10 @@ Vagrant.configure("2") do |config|
     config.vm.define "buildslave", autostart: false do |buildslave|
         config.vm.hostname = "buildslave"
         config.vm.box = "buildslavebox"
-        config.vm.synced_folder ".", "/vagrant", type: "virtualbox", disabled: true
-        config.vm.synced_folder "#{NT_ROOT}", "/northern.tech", type: "virtualbox", disabled: true
+        config.vm.synced_folder ".", "/vagrant", disabled: true,
+                                rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
+        config.vm.synced_folder "#{NT_ROOT}", "/northern.tech", disabled: true,
+                                rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
         config.vm.network "private_network", ip: "192.168.100.100"
         config.vm.provider "virtualbox" do |v|
             v.memory = 2048
