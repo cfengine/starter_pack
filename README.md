@@ -25,13 +25,14 @@ $ vagrant plugin install vagrant-vbguest
 
 ### Folder structure
 
-Have all your Northern.tech git projects in `/northern.tech`. Or export
-`NT_ROOT` with the path to your base folder.
+Have all your Northern.tech CFEngine-related projects in
+`/northern.tech/cfengine`. Or export `CFE_ROOT` with the path to your base
+folder.
 
 For example:
 
 ```
-export NT_ROOT="$HOME/Northern.Tech"
+export CFE_ROOT="$HOME/Northern.Tech/cfengine"
 ```
 
 CFEngine projects in `/northern.tech/cfengine` (similar for mender, and so on.)
@@ -41,9 +42,9 @@ If you use another path, you will have to update Vagrantfile and bash scripts.
 
 Something like this does the job:
 ```
-$ export NT_ROOT=/northern.tech
-$ sudo mkdir -p $NT_ROOT/cfengine
-$ cd $NT_ROOT/cfengine
+$ sudo mkdir -p /northern.tech/cfengine
+$ export CFE_ROOT=/northern.tech/cfengine
+$ cd $CFE_ROOT
 $ git clone git@github.com:cfengine/starter_pack.git
 $ bash ./starter_pack/repos/clone.sh
 $ cd starter_pack
@@ -226,7 +227,7 @@ from the documentation-generator repository.
 vagrant ssh docbuildslave
 vagrant@docbuildslave ~ $ bash /northern.tech/cfengine/documentation-generator/_scripts/starter_pack-build-docs.sh
 ```
-Browse the site in `$NT_ROOT/cfengine/documentation-generator/_site/index.html`
+Browse the site in `$CFE_ROOT/documentation-generator/_site/index.html`
 
 ### Notes and TODOs
 
@@ -235,6 +236,6 @@ why. Perhaps something to do with jenkins. So you will want to keep a separate
 repo and sync your changes to it.
 
 ```
-rsync -avz $NT_ROOT/cfengine/documentation $HOME/CFEngine/documentation/
+rsync -avz $CFE_ROOT/documentation $HOME/CFEngine/documentation/
 ```
 
