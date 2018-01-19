@@ -26,6 +26,10 @@ Vagrant.configure("2") do |config|
         # Ensure time synchronization:
         vb.customize [ "guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 1000 ]
     end
+    config.vm.provider :libvirt do |v|
+      v.memory = 1024
+      v.cpus = 1
+    end
 
     # Main development machine: (No network)
     config.vm.define "dev", primary: true, autostart: false do |dev|
@@ -35,6 +39,10 @@ Vagrant.configure("2") do |config|
         v.memory = 4096
         v.cpus = 2
         v.customize ["modifyvm", :id, "--vram", "16"]
+      end
+      config.vm.provider :libvirt do |v|
+        v.memory = 4096
+        v.cpus = 2
       end
     end
 
@@ -54,6 +62,11 @@ Vagrant.configure("2") do |config|
         v.memory = 2048
         v.cpus = 2
       end
+      config.vm.provider :libvirt do |v, override|
+        v.memory = 2048
+        v.cpus = 2
+        override.vm.box = "alxgrh/ubuntu-trusty-x86_64"
+      end
     end
 
     config.vm.define "buildslave", autostart: false do |buildslave|
@@ -66,6 +79,10 @@ Vagrant.configure("2") do |config|
             v.memory = 2048
             v.cpus = 2
         end
+        config.vm.provider :libvirt do |v|
+            v.memory = 2048
+            v.cpus = 2
+        end
     end
 
     # Dedicated mingw compile for windows machine:
@@ -73,6 +90,10 @@ Vagrant.configure("2") do |config|
         config.vm.hostname = "mingw"
         config.vm.network "private_network", ip: "192.168.200.200"
         config.vm.provider "virtualbox" do |v|
+            v.memory = 2048
+            v.cpus = 2
+        end
+        config.vm.provider :libvirt do |v|
             v.memory = 2048
             v.cpus = 2
         end
@@ -97,6 +118,9 @@ Vagrant.configure("2") do |config|
         config.vm.box = "ubuntu/trusty64"
         config.vm.hostname = "clean"
         config.vm.network "private_network", ip: "192.168.80.92"
+        config.vm.provider :libvirt do |v, override|
+            override.vm.box = "alxgrh/ubuntu-trusty-x86_64"
+        end
     end
 
     # =============================== BASE BOX: ==============================
@@ -109,6 +133,11 @@ Vagrant.configure("2") do |config|
             v.memory = 2048
             v.cpus = 2
         end
+        config.vm.provider :libvirt do |v, override|
+            v.memory = 2048
+            v.cpus = 2
+            override.vm.box = "alxgrh/ubuntu-trusty-x86_64"
+        end
     end
 
     # Prepackage a box on disk:
@@ -118,6 +147,11 @@ Vagrant.configure("2") do |config|
         config.vm.provider "virtualbox" do |v|
             v.memory = 2048
             v.cpus = 2
+        end
+        config.vm.provider :libvirt do |v, override|
+            v.memory = 2048
+            v.cpus = 2
+            override.vm.box = "alxgrh/ubuntu-trusty-x86_64"
         end
     end
 end
