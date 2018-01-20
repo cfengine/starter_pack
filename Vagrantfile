@@ -1,10 +1,10 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-if ENV['NT_ROOT']
-  NT_ROOT=ENV['NT_ROOT']
+if ENV['CFE_ROOT']
+  CFE_ROOT=ENV['CFE_ROOT']
 else
-  NT_ROOT="/northern.tech"
+  CFE_ROOT="/northern.tech/cfengine"
 end
 
 Vagrant.configure("2") do |config|
@@ -13,10 +13,15 @@ Vagrant.configure("2") do |config|
     config.vm.box = "basebox"
     # config.vm.box = "ubuntu/trusty64"
 
+    # make sure SSH always has host keys
+    config.vm.provision "ssh-host-keys", type: "shell", path: "ssh-host-keys.sh"
+
     # Run bootstrap.sh script on first boot:
     config.vm.provision "bootstrap", type: "shell", path: "bootstrap.sh"
-    config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
-    config.vm.synced_folder "#{NT_ROOT}", "/northern.tech", type: "virtualbox"
+    config.vm.synced_folder  ".", "/vagrant",
+                             rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
+    config.vm.synced_folder "#{CFE_ROOT}", "/northern.tech/cfengine",
+                            rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
 
     # Performace settings for each vm:
     config.vm.provider "virtualbox" do |vb|
@@ -26,15 +31,24 @@ Vagrant.configure("2") do |config|
         # Ensure time synchronization:
         vb.customize [ "guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 1000 ]
     end
+    config.vm.provider :libvirt do |v|
+      v.memory = 1024
+      v.cpus = 1
+    end
 
     # Main development machine: (No network)
     config.vm.define "dev", primary: true, autostart: false do |dev|
-        config.vm.hostname = "dev"
-        config.vm.provider "virtualbox" do |v|
-            v.memory = 4096
-            v.cpus = 2
-            v.customize ["modifyvm", :id, "--vram", "16"]
-        end
+      config.vm.hostname = "dev"
+      config.vm.network "private_network", ip: "192.168.100.10"
+      config.vm.provider "virtualbox" do |v|
+        v.memory = 4096
+        v.cpus = 2
+        v.customize ["modifyvm", :id, "--vram", "16"]
+      end
+      config.vm.provider :libvirt do |v|
+        v.memory = 4096
+        v.cpus = 2
+      end
     end
 
     # ============================ BUILD MACHINES: ===========================
@@ -42,26 +56,39 @@ Vagrant.configure("2") do |config|
     config.vm.define "docbuildslave", autostart: false do |docbuildslave|
       config.vm.hostname = "docbuildslave"
       config.vm.box = "bento/ubuntu-16.04"
-      config.vm.synced_folder ".", "/vagrant", type: "virtualbox", disabled: false
-      config.vm.synced_folder "#{NT_ROOT}", "/northern.tech", type: "virtualbox", disabled: false
-      config.vm.network "private_network", ip: "192.168.100.100"
+      config.vm.synced_folder ".", "/vagrant", disabled: false,
+                              rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
+      config.vm.synced_folder "#{CFE_ROOT}", "/northern.tech/cfengine", disabled: false,
+                              rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
+      config.vm.network "private_network", ip: "192.168.100.101"
       config.vm.provision "shell",
                           name: "Installing Jekyll and the CFEngine documentation tool-chain",
                           privileged: false,
-                          path: "#{NT_ROOT}/cfengine/documentation-generator/_scripts/provisioning-install-build-tool-chain.sh"
+                          path: "#{CFE_ROOT}/documentation-generator/_scripts/provisioning-install-build-tool-chain.sh"
       config.vm.provider "virtualbox" do |v|
         v.memory = 2048
         v.cpus = 2
+      end
+      config.vm.provider :libvirt do |v, override|
+        v.memory = 2048
+        v.cpus = 2
+        override.vm.box = "alxgrh/ubuntu-trusty-x86_64"
       end
     end
 
     config.vm.define "buildslave", autostart: false do |buildslave|
         config.vm.hostname = "buildslave"
         config.vm.box = "buildslavebox"
-        config.vm.synced_folder ".", "/vagrant", type: "virtualbox", disabled: true
-        config.vm.synced_folder "#{NT_ROOT}", "/northern.tech", type: "virtualbox", disabled: true
+        config.vm.synced_folder ".", "/vagrant", disabled: true,
+                                rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
+        config.vm.synced_folder "#{CFE_ROOT}", "/northern.tech/cfengine", disabled: true,
+                                rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
         config.vm.network "private_network", ip: "192.168.100.100"
         config.vm.provider "virtualbox" do |v|
+            v.memory = 2048
+            v.cpus = 2
+        end
+        config.vm.provider :libvirt do |v|
             v.memory = 2048
             v.cpus = 2
         end
@@ -72,6 +99,10 @@ Vagrant.configure("2") do |config|
         config.vm.hostname = "mingw"
         config.vm.network "private_network", ip: "192.168.200.200"
         config.vm.provider "virtualbox" do |v|
+            v.memory = 2048
+            v.cpus = 2
+        end
+        config.vm.provider :libvirt do |v|
             v.memory = 2048
             v.cpus = 2
         end
@@ -96,6 +127,9 @@ Vagrant.configure("2") do |config|
         config.vm.box = "ubuntu/trusty64"
         config.vm.hostname = "clean"
         config.vm.network "private_network", ip: "192.168.80.92"
+        config.vm.provider :libvirt do |v, override|
+            override.vm.box = "alxgrh/ubuntu-trusty-x86_64"
+        end
     end
 
     # =============================== BASE BOX: ==============================
@@ -104,9 +138,15 @@ Vagrant.configure("2") do |config|
     config.vm.define "basebox", autostart: false do |basebox|
         config.vm.box = "ubuntu/trusty64"
         config.vm.provision "bootstrap", type: "shell", path: "basebox/bootstrap.sh"
+        config.ssh.insert_key = false
         config.vm.provider "virtualbox" do |v|
             v.memory = 2048
             v.cpus = 2
+        end
+        config.vm.provider :libvirt do |v, override|
+            v.memory = 2048
+            v.cpus = 2
+            override.vm.box = "alxgrh/ubuntu-trusty-x86_64"
         end
     end
 
@@ -114,9 +154,15 @@ Vagrant.configure("2") do |config|
     config.vm.define "buildslavebox", autostart: false do |buildslavebox|
         config.vm.box = "ubuntu/trusty64"
         config.vm.provision "bootstrap", type: "shell", path: "buildslave/bootstrap.sh"
+        config.ssh.insert_key = false
         config.vm.provider "virtualbox" do |v|
             v.memory = 2048
             v.cpus = 2
+        end
+        config.vm.provider :libvirt do |v, override|
+            v.memory = 2048
+            v.cpus = 2
+            override.vm.box = "alxgrh/ubuntu-trusty-x86_64"
         end
     end
 end
