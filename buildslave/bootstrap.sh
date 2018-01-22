@@ -15,6 +15,7 @@ apt-get install -y pkg-config
 apt-get install -y libpam0g-dev
 apt-get install -y ntp
 apt-get install -y dpkg-dev debhelper fakeroot
+apt-get install -y libexpat1-dev
 
 # Remove unneeded packages and cache:
 # for some reason libltdl7 must not be installed so let's make sure it really isn't
