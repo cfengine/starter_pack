@@ -111,14 +111,14 @@ def get_args():
     ap.add_argument("--build",     help="Equiv: --autogen --make", action="store_true")
 
     # STEPS:
-    ap.add_argument("--clean",   help="Run clean step",   action="store_true")
-    ap.add_argument("--checkout",help="Switch git branch",type=str)
-    ap.add_argument("--fetch",   help="Run fetch step",   action="store_true")
-    ap.add_argument("--rebase",  help="Rebase git branch",type=str)
-    ap.add_argument("--autogen", help="Run autogen step", action="store_true")
-    ap.add_argument("--make",    help="Run make step",    action="store_true")
-    ap.add_argument("--install", help="Run install step", action="store_true")
-    ap.add_argument("--steps",   help="Steps (commands) to run", nargs="+")
+    ap.add_argument("--clean",    help="Run clean step",    action="store_true")
+    ap.add_argument("--checkout", help="Switch git branch", type=str)
+    ap.add_argument("--fetch",    help="Run fetch step",    action="store_true")
+    ap.add_argument("--rebase",   help="Rebase git branch", type=str)
+    ap.add_argument("--autogen",  help="Run autogen step",  action="store_true")
+    ap.add_argument("--make",     help="Run make step",     action="store_true")
+    ap.add_argument("--install",  help="Run install step",  action="store_true")
+    ap.add_argument("--steps",    help="Steps (commands) to run", nargs="+")
 
     # REPOS:
     ap.add_argument("--core",        help="Add core to --repos",        action="store_true")
