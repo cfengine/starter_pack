@@ -27,10 +27,14 @@ def run_cmd(cmd):
 
 def perform_step(step, repo, source, warnings):
     command = ""
-    if "git checkout" in step:
-        command = step
-    elif step == "clean":
+    if step == "clean":
         command = "make clean"
+    elif "git checkout" in step:
+        command = step
+    elif step == "fetch":
+        command = "git fetch --all"
+    elif "git rebase" in step:
+        command = step
     elif step == "autogen":
         command = "./autogen.sh --enable-debug"
         if repo == "nova":
@@ -59,10 +63,14 @@ def get_steps(args):
     build = args.build or args.build_all
     if args.steps:
         steps += args.steps
-    if args.checkout:
-        steps.append("git checkout {}".format(args.checkout))
     if args.clean:
         steps.append("clean")
+    if args.checkout:
+        steps.append("git checkout {}".format(args.checkout))
+    if args.fetch:
+        steps.append("fetch")
+    if args.rebase:
+        steps.append("git rebase {}".format(args.rebase))
     if args.autogen or build:
         steps.append("autogen")
     if args.make or build:
@@ -103,8 +111,10 @@ def get_args():
     ap.add_argument("--build",     help="Equiv: --autogen --make", action="store_true")
 
     # STEPS:
-    ap.add_argument("--checkout",help="Switch git branch",type=str)
     ap.add_argument("--clean",   help="Run clean step",   action="store_true")
+    ap.add_argument("--checkout",help="Switch git branch",type=str)
+    ap.add_argument("--fetch",   help="Run fetch step",   action="store_true")
+    ap.add_argument("--rebase",  help="Rebase git branch",type=str)
     ap.add_argument("--autogen", help="Run autogen step", action="store_true")
     ap.add_argument("--make",    help="Run make step",    action="store_true")
     ap.add_argument("--install", help="Run install step", action="store_true")
