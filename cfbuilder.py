@@ -14,63 +14,76 @@ def user_error(msg):
     log.error(msg)
     sys.exit(1)
 
-def run_cmd(cmd):
+def run_command(command):
     if dry_run:
-        print(cmd)
+        print(command)
         return
-    print("Running: {}".format(cmd))
-    r = os.system(cmd)
+    print("Running: {}".format(command))
+    r = os.system(command)
     if r != 0:
-        print("Command:   {}".format(cmd))
+        print("Command:   {}".format(command))
         print("Exit code: {}".format(r))
         sys.exit(r)
 
-def perform_step(step, repo, source, warnings):
-    command = ""
-    if step == "clean":
-        command = "make clean"
-    elif "git checkout" in step:
-        command = step
+def perform_step(step, repo, source, warnings, build_folder=None):
+    tmp_cmd = ""
+    command = None
+    if isinstance(step, list):
+        args = step[1:]
+        step = step[0]
+    if step == "checkout":
+        tmp_cmd = "git checkout {}".format(args[0])
     elif step == "fetch":
-        command = "git fetch --all"
-    elif "git rebase" in step:
-        command = step
+        tmp_cmd = "git fetch --all"
+    elif step == "rebase":
+        tmp_cmd = "git rebase {}".format(args[0])
+    elif step == "rsync":
+        build_folder = args[0]
+        command = "mkdir -p {dst} && rsync -r {root}/{repo} {dst}".format(root=source, repo=repo, dst=args[0])
+    elif step == "clean":
+        tmp_cmd = "make clean"
     elif step == "autogen":
-        command = "./autogen.sh --enable-debug"
+        tmp_cmd = "./autogen.sh --enable-debug"
         if repo == "nova":
-            command = "./autogen.sh --enable-debug --with-postgresql-hub=/usr"
+            tmp_cmd = "./autogen.sh --enable-debug --with-postgresql-hub=/usr"
     elif step == "make":
-        command = "make -j2"
+        tmp_cmd = "make -j2"
         if warnings:
-            command = "make -j2 CFLAGS=-Werror" # TODO: Default to this
+            tmp_cmd = "make -j2 CFLAGS=-Werror" # TODO: Default to this
     elif step == "install":
-        command = "make -j2 install"
+        tmp_cmd = "make -j2 install"
     else:
         raise NotImplementedError()
-
-    cmd = "cd {source} && cd {repo} && {command}".format(source=source,
-                                                         repo=repo,
-                                                         command=command)
-    run_cmd(cmd)
+    if not command:
+        if build_folder:
+            source = build_folder
+        command = "cd {source} && cd {repo} && {tmp_cmd}".format(source=source,
+                                                             repo=repo,
+                                                             tmp_cmd=tmp_cmd)
+    run_command(command)
+    return build_folder
 
 def build(steps, repos, source, warnings):
-    for repo in repos:
-        for step in steps:
-            perform_step(step,repo,source, warnings)
+    build_folder = None
+    for step in steps:
+        for repo in repos:
+            build_folder = perform_step(step,repo,source,warnings,build_folder)
 
 def get_steps(args):
     steps = []
     build = args.build or args.build_all
     if args.steps:
         steps += args.steps
-    if args.clean:
-        steps.append("clean")
     if args.checkout:
-        steps.append("git checkout {}".format(args.checkout))
+        steps.append(["checkout", args.checkout])
     if args.fetch:
         steps.append("fetch")
     if args.rebase:
-        steps.append("git rebase {}".format(args.rebase))
+        steps.append(["rebase", args.rebase])
+    if args.rsync:
+        steps.append(["rsync", args.rsync])
+    if args.clean:
+        steps.append("clean")
     if args.autogen or build:
         steps.append("autogen")
     if args.make or build:
@@ -111,10 +124,11 @@ def get_args():
     ap.add_argument("--build",     help="Equiv: --autogen --make", action="store_true")
 
     # STEPS:
-    ap.add_argument("--clean",    help="Run clean step",    action="store_true")
     ap.add_argument("--checkout", help="Switch git branch", type=str)
     ap.add_argument("--fetch",    help="Run fetch step",    action="store_true")
     ap.add_argument("--rebase",   help="Rebase git branch", type=str)
+    ap.add_argument("--rsync",    help="Rsync and run remaining commands in specified directory",   type=str)
+    ap.add_argument("--clean",    help="Run clean step",    action="store_true")
     ap.add_argument("--autogen",  help="Run autogen step",  action="store_true")
     ap.add_argument("--make",     help="Run make step",     action="store_true")
     ap.add_argument("--install",  help="Run install step",  action="store_true")
