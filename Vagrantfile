@@ -36,7 +36,7 @@ Vagrant.configure("2") do |config|
       v.cpus = 1
     end
 
-    # Main development machine: (No network)
+    # Main development machine:
     config.vm.define "dev", primary: true, autostart: false do |dev|
       config.vm.hostname = "dev"
       config.vm.network "private_network", ip: "192.168.100.10"
@@ -113,21 +113,21 @@ Vagrant.configure("2") do |config|
     # Hub test machine:
     config.vm.define "hub", autostart: false do |hub|
         config.vm.hostname = "hub"
-        config.vm.network "private_network", ip: "192.168.80.90"
+        config.vm.network "private_network", ip: "192.168.100.90"
         config.vm.network :forwarded_port, guest: 443, host: 9002
     end
 
     # Client test machine:
     config.vm.define "client", autostart: false do |client|
         config.vm.hostname = "client"
-        config.vm.network "private_network", ip: "192.168.80.91"
+        config.vm.network "private_network", ip: "192.168.100.91"
     end
 
     # Clean test machine:
     config.vm.define "clean", autostart: false do |clean|
         config.vm.box = "ubuntu/trusty64"
         config.vm.hostname = "clean"
-        config.vm.network "private_network", ip: "192.168.80.92"
+        config.vm.network "private_network", ip: "192.168.100.92"
         config.vm.provider :libvirt do |v, override|
             override.vm.box = "alxgrh/ubuntu-trusty-x86_64"
         end
