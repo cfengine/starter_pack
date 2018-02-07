@@ -13,6 +13,7 @@ apt-get install -y bison libbison-dev libacl1 libacl1-dev libpq-dev
 apt-get install -y lmdb-utils liblmdb-dev libpam0g-dev flex
 apt-get install -y libtokyocabinet-dev
 apt-get install -y unzip
+apt-get install -y cargo
 
 # Nova deps:
 echo 'deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' >> /etc/apt/sources.list.d/pgdg.list
