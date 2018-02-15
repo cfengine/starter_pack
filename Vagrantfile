@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
     # config.vm.box = "ubuntu/trusty64"
 
     # make sure SSH always has host keys
-    config.vm.provision "ssh-host-keys", type: "shell", path: "ssh-host-keys.sh"
+    config.vm.provision "ssh-host-keys", type: "shell", path: "scripts/ssh-host-keys.sh"
 
     # Run bootstrap.sh script on first boot:
     config.vm.provision "bootstrap", type: "shell", path: "bootstrap.sh"

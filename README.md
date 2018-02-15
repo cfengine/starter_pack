@@ -55,7 +55,7 @@ $ cd starter_pack
 ### SSH keys
 
 ```
-bash keygen.sh
+bash scripts/keygen.sh
 ```
 
 Will generate `./keys/insecure[.pub]`.
@@ -198,7 +198,7 @@ $ sudo su
 $ cd /northern.tech/cfengine/starter_pack
 $ python3 cfbuilder.py --install --all-repos
 $ /var/cfengine/bin/cf-key
-$ bash initdb.sh
+$ bash scripts/initdb.sh
 $ /var/cfengine/bin/cf-agent --bootstrap 192.168.80.90
 ```
 
@@ -238,4 +238,3 @@ repo and sync your changes to it.
 ```
 rsync -avz $CFE_ROOT/documentation $HOME/CFEngine/documentation/
 ```
-
