@@ -133,6 +133,14 @@ Vagrant.configure("2") do |config|
         end
     end
 
+    # CentOS build/test machine:
+    config.vm.define "centos", autostart: false do |centos|
+        config.vm.box = "centos/7"
+        config.vm.hostname = "centos"
+        config.vm.provision "bootstrap", type: "shell", path: "scripts/centos.sh"
+        config.vm.network "private_network", ip: "192.168.100.93"
+    end
+
     # =============================== BASE BOX: ==============================
 
     # Prepackage a box on disk:
