@@ -37,11 +37,11 @@ def perform_step(step, repo, source, warnings, build_folder=None):
         tmp_cmd = "git fetch --all"
     elif step == "rebase":
         tmp_cmd = "git rebase {}".format(args[0])
+    elif step == "clean":
+        tmp_cmd = "git clean -fXd"
     elif step == "rsync":
         build_folder = args[0]
         command = "mkdir -p {dst} && rsync -r {root}/{repo} {dst}".format(root=source, repo=repo, dst=args[0])
-    elif step == "clean":
-        tmp_cmd = "make clean"
     elif step == "autogen":
         tmp_cmd = "./autogen.sh --enable-debug"
         if repo == "nova":
@@ -80,10 +80,10 @@ def get_steps(args):
         steps.append("fetch")
     if args.rebase:
         steps.append(["rebase", args.rebase])
-    if args.rsync:
-        steps.append(["rsync", args.rsync])
     if args.clean:
         steps.append("clean")
+    if args.rsync:
+        steps.append(["rsync", args.rsync])
     if args.autogen or build:
         steps.append("autogen")
     if args.make or build:
@@ -127,8 +127,8 @@ def get_args():
     ap.add_argument("--checkout", help="Switch git branch", type=str)
     ap.add_argument("--fetch",    help="Run fetch step",    action="store_true")
     ap.add_argument("--rebase",   help="Rebase git branch", type=str)
-    ap.add_argument("--rsync",    help="Rsync and run remaining commands in specified directory",   type=str)
     ap.add_argument("--clean",    help="Run clean step",    action="store_true")
+    ap.add_argument("--rsync",    help="Rsync and run remaining commands in specified directory",   type=str)
     ap.add_argument("--autogen",  help="Run autogen step",  action="store_true")
     ap.add_argument("--make",     help="Run make step",     action="store_true")
     ap.add_argument("--install",  help="Run install step",  action="store_true")
