@@ -141,6 +141,28 @@ Vagrant.configure("2") do |config|
         config.vm.network "private_network", ip: "192.168.100.93"
     end
 
+    # ============================ DEMO MACHINES: ============================
+
+    # Hub test machine:
+    config.vm.define "alice", autostart: false do |alice|
+        config.vm.hostname = "alice"
+        config.vm.network "private_network", ip: "192.168.100.94"
+        config.vm.network :forwarded_port, guest: 443, host: 9002
+    end
+
+    # Client test machine:
+    config.vm.define "bob", autostart: false do |bob|
+        config.vm.hostname = "bob"
+        config.vm.network "private_network", ip: "192.168.100.95"
+    end
+
+    config.vm.define "charlie", autostart: false do |charlie|
+        config.vm.box = "centos/7"
+        config.vm.hostname = "charlie"
+        config.vm.provision "bootstrap", type: "shell", path: "scripts/centos.sh"
+        config.vm.network "private_network", ip: "192.168.100.96"
+    end
+
     # =============================== BASE BOX: ==============================
 
     # Prepackage a box on disk:
