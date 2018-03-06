@@ -50,6 +50,8 @@ def perform_step(step, repo, source, warnings, build_folder=None):
         tmp_cmd = "make -j2"
         if warnings:
             tmp_cmd = "make -j2 CFLAGS=-Werror" # TODO: Default to this
+    elif step == "test":
+        tmp_cmd = "cd tests/unit && make check"
     elif step == "install":
         tmp_cmd = "make -j2 install"
     else:
@@ -90,6 +92,8 @@ def get_steps(args):
         steps.append("make")
     if args.install:
         steps.append("install")
+    if args.test:
+        steps.append("test")
     if not steps:
         user_error("No build steps specified, see --help")
     return steps
@@ -131,6 +135,7 @@ def get_args():
     ap.add_argument("--rsync",    help="Rsync and run remaining commands in specified directory",   type=str)
     ap.add_argument("--autogen",  help="Run autogen step",  action="store_true")
     ap.add_argument("--make",     help="Run make step",     action="store_true")
+    ap.add_argument("--test",     help="Run make check",    action="store_true")
     ap.add_argument("--install",  help="Run install step",  action="store_true")
     ap.add_argument("--steps",    help="Steps (commands) to run", nargs="+")
 
