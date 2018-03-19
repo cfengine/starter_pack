@@ -14,7 +14,7 @@ def user_error(msg):
     log.error(msg)
     sys.exit(1)
 
-def run_command(command):
+def run_command(command, on_failure=None):
     if dry_run:
         print(command)
         return
@@ -23,11 +23,15 @@ def run_command(command):
     if r != 0:
         print("Command:   {}".format(command))
         print("Exit code: {}".format(r))
+        if on_failure:
+            print("Triggered: {}".format(on_failure))
+            os.system(on_failure)
         sys.exit(r)
 
 def perform_step(step, repo, source, warnings, build_folder=None):
     tmp_cmd = ""
     command = None
+    cmd_fail = None
     if isinstance(step, list):
         args = step[1:]
         step = step[0]
@@ -52,6 +56,7 @@ def perform_step(step, repo, source, warnings, build_folder=None):
             tmp_cmd = "make -j2 CFLAGS=-Werror" # TODO: Default to this
     elif step == "test":
         tmp_cmd = "cd tests/unit && make check"
+        cmd_fail = "cd tests/unit && cat test-suite.log"
     elif step == "install":
         tmp_cmd = "make -j2 install"
     else:
@@ -59,10 +64,10 @@ def perform_step(step, repo, source, warnings, build_folder=None):
     if not command:
         if build_folder:
             source = build_folder
-        command = "cd {source} && cd {repo} && {tmp_cmd}".format(source=source,
-                                                             repo=repo,
-                                                             tmp_cmd=tmp_cmd)
-    run_command(command)
+        cmd_cd = "cd {src} && cd {repo}".format(src=source,repo=repo)
+        command = "{cd} && {tmp_cmd}".format(cd=cmd_cd,tmp_cmd=tmp_cmd)
+        cmd_fail = "{} && {}".format(cmd_cd, cmd_fail) if cmd_fail else None
+    run_command(command, cmd_fail)
     return build_folder
 
 def build(steps, repos, source, warnings):
