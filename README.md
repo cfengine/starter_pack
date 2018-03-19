@@ -25,17 +25,17 @@ $ vagrant plugin install vagrant-vbguest
 
 ### Folder structure
 
-Have all your Northern.tech CFEngine-related projects in
-`/northern.tech/cfengine`. Or export `CFE_ROOT` with the path to your base
+Have all your Northern.tech projects in
+`/northern.tech`. Or export `NTECH_ROOT` with the path to your base
 folder.
 
 For example:
 
 ```
-export CFE_ROOT="$HOME/Northern.Tech/cfengine"
+export NTECH_ROOT="$HOME/Northern.Tech"
 ```
 
-CFEngine projects in `/northern.tech/cfengine` (similar for mender, and so on.)
+CFEngine projects in `$NTECH_ROOT/cfengine` (similar for zener, and so on.)
 The reason to place it at root is so it can have the same absolute path on all VMs, using a mounted shared folder.
 It is not a strict requirement, it's just easier.
 If you use another path, you will have to update Vagrantfile and bash scripts.
@@ -43,8 +43,8 @@ If you use another path, you will have to update Vagrantfile and bash scripts.
 Something like this does the job:
 ```
 $ sudo mkdir -p /northern.tech/cfengine
-$ export CFE_ROOT=/northern.tech/cfengine
-$ cd $CFE_ROOT
+$ export NTECH_ROOT=/northern.tech
+$ cd $NTECH_ROOT/cfengine
 $ git clone git@github.com:cfengine/starter_pack.git
 $ bash ./starter_pack/repos/clone.sh
 $ cd starter_pack
@@ -227,7 +227,7 @@ from the documentation-generator repository.
 vagrant ssh docbuildslave
 vagrant@docbuildslave ~ $ bash /northern.tech/cfengine/documentation-generator/_scripts/starter_pack-build-docs.sh
 ```
-Browse the site in `$CFE_ROOT/documentation-generator/_site/index.html`
+Browse the site in `$NTECH_ROOT/cfengine/documentation-generator/_site/index.html`
 
 ### Notes and TODOs
 
@@ -236,5 +236,5 @@ why. Perhaps something to do with jenkins. So you will want to keep a separate
 repo and sync your changes to it.
 
 ```
-rsync -avz $CFE_ROOT/documentation $HOME/CFEngine/documentation/
+rsync -avz $NTECH_ROOT/cfengine/documentation $HOME/CFEngine/documentation/
 ```
