@@ -19,7 +19,15 @@ Install guest additions plugin:
 $ vagrant plugin install vagrant-vbguest
 ```
 
-(If you know how to use libvirt/kvm or other virtualization software, feel free to use that).
+It is also possible to use libvirt (KVM) instead of VirtualBox. Apart from the
+working `qemu-kvm` setup and `libvirt`, the `vagrant-libvirt` plugin has to be
+installed too. It may either be provided as a package in your distribution or it
+can be installed by vagrant itself:
+```
+$ vagrant plugin install vagrant-libvirt
+```
+Please see the [libvirt notes](#libvirt-notes) section for some more details and
+suggestions.
 
 ## Recommended setup
 
@@ -237,4 +245,30 @@ repo and sync your changes to it.
 
 ```
 rsync -avz $NTECH_ROOT/cfengine/documentation $HOME/CFEngine/documentation/
+```
+
+## libvirt notes
+
+### Building baseboxes
+
+There is a step in the `create.sh` scripts for building baseboxes where they try
+to package the box (e.g. `vagrant package basebox --output base.box`). This may
+fail due to the VM image file not being readable for the current user. However,
+*vagrant* even prints out the command to fix it (change the permissions) so just
+run the suggested command. Unfortunately, the `create.sh` script stops on this
+so the particular step has to be run again and then all the follow-up steps have
+to be run. It would be nice if the permissions could be fixed in advance, but
+there seems to be no easy way to get the image path for a given vagrant machine.
+
+### Synced folders
+
+vagrant-libvirt doesn't support the mechanisms for sharing folders between VMs
+and the host system. So it either uses *rsync* to sync the folders (that's why
+we have some extra rsync options in the `Vagrantfile`) or sets up NFS to share
+the folders. However, it quite often fails to set NFS up properly, so it may be
+necesary to enforce rsync syncing. This can be done by adding `type: "rsync"` to
+the `synced_folder` lines. So something like this:
+```
+-    config.vm.synced_folder  ".", "/vagrant",
++    config.vm.synced_folder  ".", "/vagrant", type: "rsync",
 ```
