@@ -41,12 +41,12 @@ Vagrant.configure("2") do |config|
       config.vm.hostname = "dev"
       config.vm.network "private_network", ip: "192.168.100.10"
       config.vm.provider "virtualbox" do |v|
-        v.memory = 4096
+        v.memory = 2048
         v.cpus = 2
         v.customize ["modifyvm", :id, "--vram", "16"]
       end
       config.vm.provider :libvirt do |v|
-        v.memory = 4096
+        v.memory = 2048
         v.cpus = 2
       end
     end
