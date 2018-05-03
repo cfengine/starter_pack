@@ -47,6 +47,8 @@ def perform_step(step, repo, source, warnings, build_folder=None):
         tmp_cmd = "git fetch --all"
     elif step == "rebase":
         tmp_cmd = "git rebase {}".format(args[0])
+    elif step == "push":
+        tmp_cmd = "git push"
     elif step == "clean":
         tmp_cmd = "git clean -fXd"
     elif step == "rsync":
@@ -100,6 +102,8 @@ def get_steps(args):
         steps.append("fetch")
     if args.rebase:
         steps.append(["rebase", args.rebase])
+    if args.push:
+        steps.append(["push", args.push])
     if args.clean:
         steps.append("clean")
     if args.rsync:
@@ -162,6 +166,7 @@ def get_args():
     ap.add_argument("--checkout", help="Switch git branch", type=str)
     ap.add_argument("--fetch", help="Run fetch step", action="store_true")
     ap.add_argument("--rebase", help="Rebase git branch", type=str)
+    ap.add_argument("--push", help="Push git branch", action="store_true")
     ap.add_argument("--clean", help="Run clean step", action="store_true")
     ap.add_argument(
         "--rsync",
