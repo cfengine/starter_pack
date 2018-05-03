@@ -38,38 +38,37 @@ def build_cmd(cd, cmd):
 def perform_step(step, repo, source, warnings, build_folder=None):
     tmp_cmd = ""
     cmd_fail = None
+    optarg = None
     if isinstance(step, list):
         args = step[1:]
         step = step[0]
-    if step == "checkout":
-        tmp_cmd = "git checkout {}".format(args[0])
-    elif step == "fetch":
-        tmp_cmd = "git fetch --all"
-    elif step == "rebase":
-        tmp_cmd = "git rebase {}".format(args[0])
-    elif step == "push":
-        tmp_cmd = "git push"
-    elif step == "clean":
-        tmp_cmd = "git clean -fXd"
+        optarg = args[0]
+
+    autogen = "./autogen.sh --enable-debug" + (
+        " --with-postgresql-hub=/usr" if repo == "nova" else "")
+    make = "make -j2" + (" CFLAGS=-Werror" if warnings else "")
+    command_dict = {
+        "checkout": "git checkout {}".format(optarg),
+        "fetch": "git fetch --all",
+        "rebase": "git rebase {}".format(optarg),
+        "push": "git push",
+        "clean": "git clean -fXd",
+        "autogen": autogen,
+        "make": make,
+        "install": "make -j2 install"
+    }
+
+    if step in command_dict:
+        tmp_cmd = command_dict[step]
     elif step == "rsync":
         build_folder = args[0]
         run_command(
             "mkdir -p {dst} && rsync -r {root}/{repo} {dst}".format(
                 root=source, repo=repo, dst=build_folder))
         return build_folder
-    elif step == "autogen":
-        tmp_cmd = "./autogen.sh --enable-debug"
-        if repo == "nova":
-            tmp_cmd = "./autogen.sh --enable-debug --with-postgresql-hub=/usr"
-    elif step == "make":
-        tmp_cmd = "make -j2"
-        if warnings:
-            tmp_cmd = "make -j2 CFLAGS=-Werror"  # TODO: Default to this
     elif step == "test":
         tmp_cmd = "cd tests/unit && make check"
         cmd_fail = "cd tests/unit && cat test-suite.log"
-    elif step == "install":
-        tmp_cmd = "make -j2 install"
     else:
         raise NotImplementedError()
     if build_folder:
