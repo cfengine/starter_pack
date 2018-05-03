@@ -130,6 +130,11 @@ def get_repos(args):
         repos.append("enterprise")
     if args.nova or _all:
         repos.append("nova")
+    # Buildscripts and documentation are not necessary for normal development:
+    if args.buildscripts:
+        repos.append("buildscripts")
+    if args.documentation:
+        repos.append("documentation")
     if not repos:
         user_error("No repos specified")
     return repos
@@ -177,6 +182,14 @@ def get_args():
     ap.add_argument(
         "--enterprise", help="Add enterprise to --repos", action="store_true")
     ap.add_argument("--nova", help="Add nova to --repos", action="store_true")
+    ap.add_argument(
+        "--buildscripts",
+        help="Add buildscripts to --repos",
+        action="store_true")
+    ap.add_argument(
+        "--documentation",
+        help="Add documentation to --repos",
+        action="store_true")
     ap.add_argument(
         "--repos", help="Repositories to run commands in", nargs="+")
 
