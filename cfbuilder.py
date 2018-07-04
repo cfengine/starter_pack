@@ -138,6 +138,10 @@ def get_repos(args):
         repos.append("buildscripts")
     if args.documentation:
         repos.append("documentation")
+    if args.design_center:
+        repos.append("design-center")
+    if args.mission_portal:
+        repos.append("mission-portal")
     if not repos:
         user_error("No repos specified")
     return repos
@@ -193,6 +197,14 @@ def get_args():
     ap.add_argument(
         "--documentation",
         help="Add documentation to --repos",
+        action="store_true")
+    ap.add_argument(
+        "--design-center",
+        help="Add design-center to --repos",
+        action="store_true")
+    ap.add_argument(
+        "--mission-portal",
+        help="Add mission-portal to --repos",
         action="store_true")
     ap.add_argument(
         "--repos", help="Repositories to run commands in", nargs="+")
