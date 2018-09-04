@@ -21,7 +21,6 @@ cfengine_rm masterfiles
 cfengine_rm enterprise
 cfengine_rm nova
 cfengine_rm mission-portal
-cfengine_rm design-center
 cfengine_rm buildscripts
 cfengine_rm documentation
 cfengine_rm documentation-generator

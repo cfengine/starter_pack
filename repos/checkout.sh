@@ -19,7 +19,6 @@ checkout 3.12.x enterprise
 checkout 3.12.x nova
 checkout 3.12.x mission-portal
 checkout 3.12.x ldap-api
-checkout 3.12.x design-center
 checkout 3.12.x buildscripts
 checkout 3.12 documentation
 checkout master documentation-generator
