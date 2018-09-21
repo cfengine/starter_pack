@@ -64,12 +64,7 @@ cd redis-3.2.11 || exit 1
 make
 make install
 
-mkdir -p /home/vagrant/.ssh
-cp /vagrant/keys/insecure.pub /home/vagrant/.ssh/id_rsa.pub
-cp /vagrant/keys/insecure /home/vagrant/.ssh/id_rsa
-chown vagrant:vagrant /home/vagrant/.ssh/id_rsa
-chown vagrant:vagrant /home/vagrant/.ssh/id_rsa.pub
-chmod 600 /home/vagrant/.ssh/id_rsa
-chmod 600 /home/vagrant/.ssh/id_rsa.pub
+# The basebox is only for downloading and installing time consuming deps
+# Do all other configuration in the other bootstrap.sh script
 
 history -c

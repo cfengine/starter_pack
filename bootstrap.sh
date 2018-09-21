@@ -24,6 +24,16 @@ touch /home/vagrant/.bash_profile
 chown vagrant:vagrant /home/vagrant/.bashrc
 chown vagrant:vagrant /home/vagrant/.bash_profile
 
+for filename in /vagrant/keys/*.pub ; do cat $filename >> /home/vagrant/.ssh/authorized_keys ; done
+
+mkdir -p /home/vagrant/.ssh
+cp /vagrant/keys/insecure.pub /home/vagrant/.ssh/id_rsa.pub
+cp /vagrant/keys/insecure /home/vagrant/.ssh/id_rsa
+chown vagrant:vagrant /home/vagrant/.ssh/id_rsa
+chown vagrant:vagrant /home/vagrant/.ssh/id_rsa.pub
+chmod 600 /home/vagrant/.ssh/id_rsa
+chmod 600 /home/vagrant/.ssh/id_rsa.pub
+
 # Replace prompt
 grep -q -F 'export PS1="\u@\h \W $ "' /home/vagrant/.bashrc       || echo 'export PS1="\u@\h \W $ "' >> /home/vagrant/.bashrc
 grep -q -F 'export PS1="\u@\h \W $ "' /home/vagrant/.bash_profile || echo 'export PS1="\u@\h \W $ "' >> /home/vagrant/.bash_profile
