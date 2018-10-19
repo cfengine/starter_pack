@@ -29,4 +29,5 @@ cfengine_clone design-center
 cfengine_clone buildscripts
 cfengine_clone documentation
 cfengine_clone documentation-generator
+cfengine_clone system-testing
 mender_clone infra
