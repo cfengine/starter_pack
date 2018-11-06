@@ -31,9 +31,11 @@ Vagrant.configure("2") do |config|
         # Ensure time synchronization:
         vb.customize [ "guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 1000 ]
     end
-    config.vm.provider :libvirt do |v|
+    config.vm.provider :libvirt do |v, override|
       v.memory = 1024
       v.cpus = 1
+      override.vm.synced_folder "./", "/vagrant", type: :rsync
+      override.vm.synced_folder "#{NTECH_ROOT}", "/northern.tech", type: :rsync
     end
 
     # Main development machine:
