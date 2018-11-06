@@ -66,7 +66,7 @@ Vagrant.configure("2") do |config|
       config.vm.provision "shell",
                           name: "Installing Jekyll and the CFEngine documentation tool-chain",
                           privileged: false,
-                          path: "#{NTECH_ROOT}/documentation-generator/_scripts/provisioning-install-build-tool-chain.sh"
+                          path: "#{NTECH_ROOT}/cfengine/documentation-generator/_scripts/provisioning-install-build-tool-chain.sh"
       config.vm.provider "virtualbox" do |v|
         v.memory = 2048
         v.cpus = 2
