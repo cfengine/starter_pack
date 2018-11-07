@@ -22,7 +22,7 @@ wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
 apt-get update
 
 apt-get install -y postgresql-10 postgresql-contrib-10 # libpq-dev pgadmin3
-apt-get install -y postgresql-10-pgtap
+apt-get install -y python-psycopg2
 apt-get install -y libpgtypes3 libecpg-dev libhiredis-dev libldap2-dev
 apt-get install -y python-software-properties
 add-apt-repository -y ppa:ondrej/php
