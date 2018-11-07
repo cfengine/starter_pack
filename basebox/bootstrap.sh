@@ -21,7 +21,28 @@ wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
   sudo apt-key add -
 apt-get update
 
+function init_bashrc {
+    touch /home/vagrant/.bashrc
+    touch /home/vagrant/.bash_profile
+    touch /root/.bashrc
+    touch /root/.bash_profile
+}
+
+function add_line_if_not_found {
+    grep -q -F "$1" $2 || echo "$1" >> $2
+}
+
+function add_to_path {
+    init_bashrc
+    line="export PATH=$PATH:$1"
+    add_line_if_not_found "$line" "/home/vagrant/.bashrc"
+    add_line_if_not_found "$line" "/home/vagrant/.bash_profile"
+    add_line_if_not_found "$line" "/root/.bashrc"
+    add_line_if_not_found "$line" "/root/.bash_profile"
+}
+
 apt-get install -y postgresql-10 postgresql-contrib-10 # libpq-dev pgadmin3
+add_to_path "/usr/lib/postgresql/10/bin"
 apt-get install -y python-psycopg2
 apt-get install -y libpgtypes3 libecpg-dev libhiredis-dev libldap2-dev
 apt-get install -y python-software-properties
