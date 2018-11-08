@@ -15,3 +15,4 @@ base.box
 build.box
 keys
 .ropeproject
+__pycache__
