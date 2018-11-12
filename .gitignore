@@ -15,3 +15,5 @@ base.box
 build.box
 keys
 .ropeproject
+__pycache__
+scripts/custom_vm_init.sh

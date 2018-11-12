@@ -29,3 +29,11 @@ grep -q -F 'export PS1="\u@\h \W $ "' /home/vagrant/.bashrc       || echo 'expor
 grep -q -F 'export PS1="\u@\h \W $ "' /home/vagrant/.bash_profile || echo 'export PS1="\u@\h \W $ "' >> /home/vagrant/.bash_profile
 grep -q -F 'export PS1="\u@\h \W $ "' /root/.bashrc               || echo 'export PS1="\u@\h \W $ "' >> /root/.bashrc
 grep -q -F 'export PS1="\u@\h \W $ "' /root/.bash_profile         || echo 'export PS1="\u@\h \W $ "' >> /root/.bash_profile
+
+# Optional custom script (for adding user config / dotfiles for example):
+INIT_SCRIPT="/vagrant/scripts/custom_vm_init.sh"
+
+if [ -f "$INIT_SCRIPT" ]; then
+    bash "$INIT_SCRIPT"
+    su -c "bash $INIT_SCRIPT" vagrant
+fi
