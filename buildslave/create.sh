@@ -10,6 +10,6 @@ vagrant box update buildslavebox
 vagrant up buildslavebox
 vagrant package buildslavebox --output buildslave.box
 vagrant destroy -f buildslavebox
-vagrant box remove -f buildslavebox
+vagrant box remove -f buildslavebox || echo "Warning: Couldn't remove previous basebox"
 vagrant box add buildslavebox buildslave.box
-rm -f buildslave.box
+rm -f buildslave.box || echo "Warning: Couldn't delete base.box"
