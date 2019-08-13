@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
     # Use a custom box:
     # https://scotch.io/tutorials/how-to-create-a-vagrant-base-box-from-an-existing-one
     config.vm.box = "basebox"
-    # config.vm.box = "ubuntu/trusty64"
+    # config.vm.box = "ubuntu/bionic64"
 
     # make sure SSH always has host keys
     config.vm.provision "ssh-host-keys", type: "shell", path: "scripts/ssh-host-keys.sh"
@@ -127,7 +127,7 @@ Vagrant.configure("2") do |config|
 
     # Clean test machine:
     config.vm.define "clean", autostart: false do |clean|
-        config.vm.box = "ubuntu/trusty64"
+        config.vm.box = "ubuntu/bionic64"
         config.vm.hostname = "clean"
         config.vm.network "private_network", ip: "192.168.100.92"
         config.vm.provider :libvirt do |v, override|
@@ -169,7 +169,7 @@ Vagrant.configure("2") do |config|
 
     # Prepackage a box on disk:
     config.vm.define "basebox", autostart: false do |basebox|
-        config.vm.box = "ubuntu/trusty64"
+        config.vm.box = "ubuntu/bionic64"
         config.vm.provision "bootstrap", type: "shell", path: "basebox/bootstrap.sh"
         config.ssh.insert_key = false
         config.vm.provider "virtualbox" do |v|
@@ -185,7 +185,7 @@ Vagrant.configure("2") do |config|
 
     # Prepackage a box on disk:
     config.vm.define "buildslavebox", autostart: false do |buildslavebox|
-        config.vm.box = "ubuntu/trusty64"
+        config.vm.box = "ubuntu/bionic64"
         config.vm.provision "bootstrap", type: "shell", path: "buildslave/bootstrap.sh"
         config.ssh.insert_key = false
         config.vm.provider "virtualbox" do |v|
