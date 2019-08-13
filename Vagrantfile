@@ -44,7 +44,7 @@ Vagrant.configure("2") do |config|
       config.vm.network "private_network", ip: "192.168.100.10"
       config.vm.provider "virtualbox" do |v|
         v.memory = 2048
-        v.cpus = 2
+        v.cpus = 4
         v.customize ["modifyvm", :id, "--vram", "16"]
       end
       config.vm.provider :libvirt do |v|
@@ -69,7 +69,7 @@ Vagrant.configure("2") do |config|
                           path: "#{NTECH_ROOT}/cfengine/documentation-generator/_scripts/provisioning-install-build-tool-chain.sh"
       config.vm.provider "virtualbox" do |v|
         v.memory = 2048
-        v.cpus = 2
+        v.cpus = 4
       end
       config.vm.provider :libvirt do |v, override|
         v.memory = 2048
@@ -88,7 +88,7 @@ Vagrant.configure("2") do |config|
         config.vm.network "private_network", ip: "192.168.100.100"
         config.vm.provider "virtualbox" do |v|
             v.memory = 2048
-            v.cpus = 2
+            v.cpus = 4
         end
         config.vm.provider :libvirt do |v|
             v.memory = 2048
@@ -102,7 +102,7 @@ Vagrant.configure("2") do |config|
         config.vm.network "private_network", ip: "192.168.200.200"
         config.vm.provider "virtualbox" do |v|
             v.memory = 2048
-            v.cpus = 2
+            v.cpus = 4
         end
         config.vm.provider :libvirt do |v|
             v.memory = 2048
@@ -174,7 +174,7 @@ Vagrant.configure("2") do |config|
         config.ssh.insert_key = false
         config.vm.provider "virtualbox" do |v|
             v.memory = 2048
-            v.cpus = 2
+            v.cpus = 4
         end
         config.vm.provider :libvirt do |v, override|
             v.memory = 2048
@@ -190,7 +190,7 @@ Vagrant.configure("2") do |config|
         config.ssh.insert_key = false
         config.vm.provider "virtualbox" do |v|
             v.memory = 2048
-            v.cpus = 2
+            v.cpus = 4
         end
         config.vm.provider :libvirt do |v, override|
             v.memory = 2048
