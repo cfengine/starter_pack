@@ -141,30 +141,39 @@ The `buildslave` machine is set up specifically for the `build-remote` script.
 This script checks that certain dependencies are installed, while others are not installed, to avoid conflicting dependencies.
 Running `build-remote` from `dev` VM to `buildslave` VM is the easiest.
 
-### Creating a buildslave base box
+### Example: mingw cross compile for windows using build-remote
+
+If you haven't already, create the buildslave base box:
+
 ```
 $ bash ./buildslave/create.sh
 ```
 
-### Starting the build slave
+This VM has some extra dependencies for performing buildslave tasks.
+You can now use build-remote from dev machine to build on buildslave:
+
 ```
 $ vagrant up buildslave
-```
-
-### Testing ssh for build-remote
-```
+Bringing machine 'buildslave' up with 'virtualbox' provider...
+$ vagrant up dev
+Bringing machine 'dev' up with 'virtualbox' provider...
 $ vagrant ssh dev
-$ ssh build@buildslave
-$ exit
+vagrant@dev ~ $ ssh build@buildslave
+The authenticity of host 'buildslave (192.168.100.100)' can't be established.
+ECDSA key fingerprint is SHA256:VoU/qb7Y7Pt1HYBw7ze1DXHF3E99hQvhBjoUjme9+3c.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'buildslave,192.168.100.100' (ECDSA) to the list of known hosts.
+build@buildslave:~$ logout
+Connection to buildslave closed.
+vagrant@dev ~ $ bash /northern.tech/cfengine/buildscripts/build-remote -c x64-mingw --source /northern.tech/cfengine --verbose build@buildslave
+[...]
 ```
-(Should not ask for password)
 
-### Running build-remote
-```
-$ cd /northern.tech/cfengine/buildscripts
-$ bash build-remote --verbose --source /northern.tech/cfengine/ build@buildslave
-```
-**Note:** The `build-remote` script will put output in `/northern.tech/cfengine/output`
+This currently works for building dependencies as well as our binaries, but not packaging.
+The `wix.exe` dependency is not installed on buildslave, and adding it is not trivial.
+
+If you need packages to test your code, a workaround is to get jenkins to build a package.
+You can then install the package once, and as you make changes, upload the locally compiled `.exe` files via `scp` or similar.
 
 ## Building CFEngine Enterprise locally
 
