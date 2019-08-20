@@ -46,7 +46,9 @@ def perform_step(step, repo, source, warnings, build_folder=None):
 
     autogen = "./autogen.sh --enable-debug" + (
         " --with-postgresql-hub=/usr" if repo == "nova" else "")
-    make = "make -j2" + (" CFLAGS=-Werror" if warnings else "")
+    make = "make -j2" + (
+        " CFLAGS='-Werror -Wall -Wno-pointer-sign' LDFLAGS='-pthread'"
+        if warnings else "")
     command_dict = {
         "checkout": "git checkout {}".format(optarg),
         "fetch": "git fetch --all",
@@ -125,6 +127,8 @@ def get_repos(args):
     _all = args.build_all or args.all_repos
     if args.repos and not _all:
         repos += args.repos
+    if args.libntech or _all:
+        repos.append("libntech")
     if args.core or _all:
         repos.append("core")
     if args.masterfiles or _all:
@@ -160,7 +164,7 @@ def get_args():
         "--build-all", help="Equiv: --build --all-repos", action="store_true")
     ap.add_argument(
         "--all-repos",
-        help="Equiv: --core --masterfiles --enterprise --nova",
+        help="Equiv: --libntech --core --masterfiles --enterprise --nova",
         action="store_true")
     ap.add_argument(
         "--build", help="Equiv: --autogen --make", action="store_true")
@@ -182,6 +186,7 @@ def get_args():
     ap.add_argument("--steps", help="Steps (commands) to run", nargs="+")
 
     # REPOS:
+    ap.add_argument("--libntech", help="Add libntech to --repos", action="store_true")
     ap.add_argument("--core", help="Add core to --repos", action="store_true")
     ap.add_argument(
         "--masterfiles",

@@ -170,17 +170,17 @@ $ bash build-remote --verbose --source /northern.tech/cfengine/ build@buildslave
 
 ### Compiling core, enterprise and nova on the dev machine
 
-Using `cfbuilder.py`:
+Using `cf-builder.py`:
 ```
 $ vagrant up dev
 $ vagrant ssh dev
 $ cd /northern.tech/cfengine/starter_pack
-$ python3 cfbuilder.py --autogen --make --core --masterfiles --enterprise --nova
+$ python3 cf-builder.py --autogen --make --core --masterfiles --enterprise --nova
 ```
 
 The individual steps:
 ```
-$ python3 cfbuilder.py --build-all --dry-run
+$ python3 cf-builder.py --build-all --dry-run
 
 These commands would run if you didn't specify --dry-run:
 cd /northern.tech/cfengine && cd core && ./autogen.sh --enable-debug
@@ -190,7 +190,7 @@ cd /northern.tech/cfengine && cd enterprise && make -j2
 cd /northern.tech/cfengine && cd nova && ./autogen.sh --enable-debug --with-postgresql-hub=/usr
 cd /northern.tech/cfengine && cd nova && make -j2
 ```
-(You can run the steps without using `cfbuilder.py`, simplify the `cd` commands if you'd like)
+(You can run the steps without using `cf-builder.py`, simplify the `cd` commands if you'd like)
 
 ### WIP! Installing CFEngine on hub machine
 
@@ -198,13 +198,13 @@ In general, don't install on your dev machine, and don't run sudo commands on th
 Everything you're doing there should work without sudo.
 Use the `hub` and `client` machines to install and bootstrap.
 
-After compiling on `dev` machine, use `cfbuilder.py` to install on `hub`:
+After compiling on `dev` machine, use `cf-builder.py` to install on `hub`:
 ```
 $ vagrant up hub
 $ vagrant ssh hub
 $ sudo su
 $ cd /northern.tech/cfengine/starter_pack
-$ python3 cfbuilder.py --install --all-repos
+$ python3 cf-builder.py --install --all-repos
 $ /var/cfengine/bin/cf-key
 $ bash scripts/initdb.sh
 $ /var/cfengine/bin/cf-agent --bootstrap 192.168.80.90

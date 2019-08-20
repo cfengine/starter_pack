@@ -48,7 +48,7 @@ apt-get install -y libpgtypes3 libecpg-dev libhiredis-dev libldap2-dev
 apt-get install -y python-software-properties
 add-apt-repository -y ppa:ondrej/php
 apt-get update
-apt-get install -y --force-yes php7.0-dev
+apt-get install -y --force-yes php7.3-dev
 
 # mingw cross compile deps:
 apt-get install -y dpkg-dev debhelper g++ libncurses5 pkg-config build-essential libpam0g-dev mingw-w64
