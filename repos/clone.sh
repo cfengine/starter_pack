@@ -4,7 +4,7 @@ cloner(){
     if [ -d "$2" ]; then
         echo "$2 already exists"
     else
-        git clone --origin upstream git@github.com:$1/$2.git
+        git clone --recursive --origin upstream git@github.com:$1/$2.git
         cd $2
         git fetch --all --tags
         cd ..
