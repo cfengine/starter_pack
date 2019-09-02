@@ -44,7 +44,7 @@ def perform_step(step, repo, source, warnings, build_folder=None):
         step = step[0]
         optarg = args[0]
 
-    autogen = "./autogen.sh --enable-debug" + (
+    autogen = "./autogen.sh -C --enable-debug" + (
         " --with-postgresql-hub=/usr" if repo == "nova" else "")
     make = "make -j2" + (
         " CFLAGS='-Werror -Wall -Wno-pointer-sign' LDFLAGS='-pthread'"
