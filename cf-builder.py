@@ -105,10 +105,10 @@ def get_steps(args):
         steps.append(["rebase", args.rebase])
     if args.push:
         steps.append(["push", args.push])
-    if args.clean:
-        steps.append("clean")
     if args.rsync:
         steps.append(["rsync", args.rsync])
+    if args.clean:
+        steps.append("clean")
     if args.autogen or build:
         steps.append("autogen")
     if args.make or build:
