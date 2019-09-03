@@ -44,7 +44,7 @@ def perform_step(step, repo, source, warnings, build_folder=None):
         step = step[0]
         optarg = args[0]
 
-    autogen = "./autogen.sh --enable-debug" + (
+    autogen = "./autogen.sh -C --enable-debug" + (
         " --with-postgresql-hub=/usr" if repo == "nova" else "")
     make = "make -j2" + (
         " CFLAGS='-Werror -Wall -Wno-pointer-sign' LDFLAGS='-pthread'"
@@ -105,10 +105,10 @@ def get_steps(args):
         steps.append(["rebase", args.rebase])
     if args.push:
         steps.append(["push", args.push])
-    if args.clean:
-        steps.append("clean")
     if args.rsync:
         steps.append(["rsync", args.rsync])
+    if args.clean:
+        steps.append("clean")
     if args.autogen or build:
         steps.append("autogen")
     if args.make or build:
