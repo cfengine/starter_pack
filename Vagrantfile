@@ -42,6 +42,7 @@ Vagrant.configure("2") do |config|
     config.vm.define "dev", primary: true, autostart: false do |dev|
       dev.vm.hostname = "dev"
       dev.vm.network "private_network", ip: "192.168.100.10"
+      dev.vm.network "private_network", ip: "fde4:8dba:82e1::c4"
       dev.vm.provider "virtualbox" do |v|
         v.memory = 2048
         v.cpus = 4
