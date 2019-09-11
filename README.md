@@ -40,7 +40,7 @@ folder.
 For example:
 
 ```
-export NTECH_ROOT="$HOME/Northern.Tech"
+export NTECH_ROOT="$HOME/northern.tech"
 ```
 
 CFEngine projects in `$NTECH_ROOT/cfengine` (similar for zener, and so on.)
