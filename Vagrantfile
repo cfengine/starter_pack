@@ -40,14 +40,14 @@ Vagrant.configure("2") do |config|
 
     # Main development machine:
     config.vm.define "dev", primary: true, autostart: false do |dev|
-      config.vm.hostname = "dev"
-      config.vm.network "private_network", ip: "192.168.100.10"
-      config.vm.provider "virtualbox" do |v|
+      dev.vm.hostname = "dev"
+      dev.vm.network "private_network", ip: "192.168.100.10"
+      dev.vm.provider "virtualbox" do |v|
         v.memory = 2048
         v.cpus = 4
         v.customize ["modifyvm", :id, "--vram", "16"]
       end
-      config.vm.provider :libvirt do |v|
+      dev.vm.provider :libvirt do |v|
         v.memory = 2048
         v.cpus = 2
       end
@@ -56,22 +56,22 @@ Vagrant.configure("2") do |config|
     # ============================ BUILD MACHINES: ===========================
 
     config.vm.define "docbuildslave", autostart: false do |docbuildslave|
-      config.vm.hostname = "docbuildslave"
-      config.vm.box = "bento/ubuntu-16.04"
-      config.vm.synced_folder ".", "/vagrant", disabled: false,
+      docbuildslave.vm.hostname = "docbuildslave"
+      docbuildslave.vm.box = "bento/ubuntu-16.04"
+      docbuildslave.vm.synced_folder ".", "/vagrant", disabled: false,
                               rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
-      config.vm.synced_folder "#{NTECH_ROOT}", "/northern.tech", disabled: false,
+      docbuildslave.vm.synced_folder "#{NTECH_ROOT}", "/northern.tech", disabled: false,
                               rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
-      config.vm.network "private_network", ip: "192.168.100.101"
-      config.vm.provision "shell",
+      docbuildslave.vm.network "private_network", ip: "192.168.100.101"
+      docbuildslave.vm.provision "shell",
                           name: "Installing Jekyll and the CFEngine documentation tool-chain",
                           privileged: false,
                           path: "#{NTECH_ROOT}/cfengine/documentation-generator/_scripts/provisioning-install-build-tool-chain.sh"
-      config.vm.provider "virtualbox" do |v|
+      docbuildslave.vm.provider "virtualbox" do |v|
         v.memory = 2048
         v.cpus = 4
       end
-      config.vm.provider :libvirt do |v, override|
+      docbuildslave.vm.provider :libvirt do |v, override|
         v.memory = 2048
         v.cpus = 2
         override.vm.box = "alxgrh/ubuntu-trusty-x86_64"
@@ -79,18 +79,18 @@ Vagrant.configure("2") do |config|
     end
 
     config.vm.define "buildslave", autostart: false do |buildslave|
-        config.vm.hostname = "buildslave"
-        config.vm.box = "buildslavebox"
-        config.vm.synced_folder ".", "/vagrant", disabled: true,
+        buildslave.vm.hostname = "buildslave"
+        buildslave.vm.box = "buildslavebox"
+        buildslave.vm.synced_folder ".", "/vagrant", disabled: true,
                                 rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
-        config.vm.synced_folder "#{NTECH_ROOT}", "/northern.tech", disabled: true,
+        buildslave.vm.synced_folder "#{NTECH_ROOT}", "/northern.tech", disabled: true,
                                 rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
-        config.vm.network "private_network", ip: "192.168.100.100"
-        config.vm.provider "virtualbox" do |v|
+        buildslave.vm.network "private_network", ip: "192.168.100.100"
+        buildslave.vm.provider "virtualbox" do |v|
             v.memory = 2048
             v.cpus = 4
         end
-        config.vm.provider :libvirt do |v|
+        buildslave.vm.provider :libvirt do |v|
             v.memory = 2048
             v.cpus = 2
         end
@@ -98,13 +98,13 @@ Vagrant.configure("2") do |config|
 
     # Dedicated mingw compile for windows machine:
     config.vm.define "mingw", primary: false, autostart: false do |mingw|
-        config.vm.hostname = "mingw"
-        config.vm.network "private_network", ip: "192.168.200.200"
-        config.vm.provider "virtualbox" do |v|
+        mingw.vm.hostname = "mingw"
+        mingw.vm.network "private_network", ip: "192.168.200.200"
+        mingw.vm.provider "virtualbox" do |v|
             v.memory = 2048
             v.cpus = 4
         end
-        config.vm.provider :libvirt do |v|
+        mingw.vm.provider :libvirt do |v|
             v.memory = 2048
             v.cpus = 2
         end
@@ -114,69 +114,69 @@ Vagrant.configure("2") do |config|
 
     # Hub test machine:
     config.vm.define "hub", autostart: false do |hub|
-        config.vm.hostname = "hub"
-        config.vm.network "private_network", ip: "192.168.100.90"
-        config.vm.network :forwarded_port, guest: 443, host: 9002
+        hub.vm.hostname = "hub"
+        hub.vm.network "private_network", ip: "192.168.100.90"
+        hub.vm.network :forwarded_port, guest: 443, host: 9002
     end
 
     # Client test machine:
     config.vm.define "client", autostart: false do |client|
-        config.vm.hostname = "client"
-        config.vm.network "private_network", ip: "192.168.100.91"
+        client.vm.hostname = "client"
+        client.vm.network "private_network", ip: "192.168.100.91"
     end
 
     # Clean test machine:
     config.vm.define "clean", autostart: false do |clean|
-        config.vm.box = "ubuntu/bionic64"
-        config.vm.hostname = "clean"
-        config.vm.network "private_network", ip: "192.168.100.92"
-        config.vm.provider :libvirt do |v, override|
+        clean.vm.box = "ubuntu/bionic64"
+        clean.vm.hostname = "clean"
+        clean.vm.network "private_network", ip: "192.168.100.92"
+        clean.vm.provider :libvirt do |v, override|
             override.vm.box = "alxgrh/ubuntu-trusty-x86_64"
         end
     end
 
     # CentOS build/test machine:
     config.vm.define "centos", autostart: false do |centos|
-        config.vm.box = "centos/7"
-        config.vm.hostname = "centos"
-        config.vm.provision "bootstrap", type: "shell", path: "scripts/centos.sh"
-        config.vm.network "private_network", ip: "192.168.100.93"
+        centos.vm.box = "centos/7"
+        centos.vm.hostname = "centos"
+        centos.vm.provision "bootstrap", type: "shell", path: "scripts/centos.sh"
+        centos.vm.network "private_network", ip: "192.168.100.93"
     end
 
     # ============================ DEMO MACHINES: ============================
 
     # Hub test machine:
     config.vm.define "alice", autostart: false do |alice|
-        config.vm.hostname = "alice"
-        config.vm.network "private_network", ip: "192.168.100.94"
-        config.vm.network :forwarded_port, guest: 443, host: 9002
+        alice.vm.hostname = "alice"
+        alice.vm.network "private_network", ip: "192.168.100.94"
+        alice.vm.network :forwarded_port, guest: 443, host: 9002
     end
 
     # Client test machine:
     config.vm.define "bob", autostart: false do |bob|
-        config.vm.hostname = "bob"
-        config.vm.network "private_network", ip: "192.168.100.95"
+        bob.vm.hostname = "bob"
+        bob.vm.network "private_network", ip: "192.168.100.95"
     end
 
     config.vm.define "charlie", autostart: false do |charlie|
-        config.vm.box = "centos/7"
-        config.vm.hostname = "charlie"
-        config.vm.provision "bootstrap", type: "shell", path: "scripts/centos.sh"
-        config.vm.network "private_network", ip: "192.168.100.96"
+        charlie.vm.box = "centos/7"
+        charlie.vm.hostname = "charlie"
+        charlie.vm.provision "bootstrap", type: "shell", path: "scripts/centos.sh"
+        charlie.vm.network "private_network", ip: "192.168.100.96"
     end
 
     # =============================== BASE BOX: ==============================
 
     # Prepackage a box on disk:
     config.vm.define "basebox", autostart: false do |basebox|
-        config.vm.box = "ubuntu/bionic64"
-        config.vm.provision "bootstrap", type: "shell", path: "basebox/bootstrap.sh"
-        config.ssh.insert_key = false
-        config.vm.provider "virtualbox" do |v|
+        basebox.vm.box = "ubuntu/bionic64"
+        basebox.vm.provision "bootstrap", type: "shell", path: "basebox/bootstrap.sh"
+        basebox.ssh.insert_key = false
+        basebox.vm.provider "virtualbox" do |v|
             v.memory = 2048
             v.cpus = 4
         end
-        config.vm.provider :libvirt do |v, override|
+        basebox.vm.provider :libvirt do |v, override|
             v.memory = 2048
             v.cpus = 2
             override.vm.box = "alxgrh/ubuntu-trusty-x86_64"
@@ -185,14 +185,14 @@ Vagrant.configure("2") do |config|
 
     # Prepackage a box on disk:
     config.vm.define "buildslavebox", autostart: false do |buildslavebox|
-        config.vm.box = "ubuntu/bionic64"
-        config.vm.provision "bootstrap", type: "shell", path: "buildslave/bootstrap.sh"
-        config.ssh.insert_key = false
-        config.vm.provider "virtualbox" do |v|
+        buildslavebox.vm.box = "ubuntu/bionic64"
+        buildslavebox.vm.provision "bootstrap", type: "shell", path: "buildslave/bootstrap.sh"
+        buildslavebox.ssh.insert_key = false
+        buildslavebox.vm.provider "virtualbox" do |v|
             v.memory = 2048
             v.cpus = 4
         end
-        config.vm.provider :libvirt do |v, override|
+        buildslavebox.vm.provider :libvirt do |v, override|
             v.memory = 2048
             v.cpus = 2
             override.vm.box = "alxgrh/ubuntu-trusty-x86_64"
