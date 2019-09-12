@@ -14,6 +14,8 @@ apt-get install -y lmdb-utils liblmdb-dev libpam0g-dev flex
 apt-get install -y libtokyocabinet-dev
 apt-get install -y unzip
 apt-get install -y cargo
+apt-get install -y nodejs npm jq
+npm install --global json5
 
 # Nova deps:
 echo 'deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' >> /etc/apt/sources.list.d/pgdg.list
