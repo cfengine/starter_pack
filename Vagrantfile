@@ -34,6 +34,10 @@ Vagrant.configure("2") do |config|
     config.vm.provider :libvirt do |v, override|
       v.memory = 1024
       v.cpus = 1
+      # Fedora 30+ uses QEMU sessions by default, breaking pretty much all
+      # previously working Vagrantfiles:
+      # https://fedoraproject.org/wiki/Changes/Vagrant_2.2_with_QEMU_Session#Upgrade.2Fcompatibility_impact
+      v.qemu_use_session = false
       override.vm.synced_folder "./", "/vagrant", type: :rsync
       override.vm.synced_folder "#{NTECH_ROOT}", "/northern.tech", type: :rsync
     end
