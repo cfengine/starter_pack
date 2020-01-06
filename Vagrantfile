@@ -34,6 +34,10 @@ Vagrant.configure("2") do |config|
     config.vm.provider :libvirt do |v, override|
       v.memory = 1024
       v.cpus = 1
+      # Fedora 30+ uses QEMU sessions by default, breaking pretty much all
+      # previously working Vagrantfiles:
+      # https://fedoraproject.org/wiki/Changes/Vagrant_2.2_with_QEMU_Session#Upgrade.2Fcompatibility_impact
+      v.qemu_use_session = false
       override.vm.synced_folder "./", "/vagrant", type: :rsync
       override.vm.synced_folder "#{NTECH_ROOT}", "/northern.tech", type: :rsync
     end
@@ -42,7 +46,8 @@ Vagrant.configure("2") do |config|
     config.vm.define "dev", primary: true, autostart: false do |dev|
       dev.vm.hostname = "dev"
       dev.vm.network "private_network", ip: "192.168.100.10"
-      dev.vm.network "private_network", ip: "fde4:8dba:82e1::c4"
+      # Doesn't work in libvirt:
+      # dev.vm.network "private_network", ip: "fde4:8dba:82e1::c4"
       dev.vm.provider "virtualbox" do |v|
         v.memory = 2048
         v.cpus = 4
@@ -75,7 +80,7 @@ Vagrant.configure("2") do |config|
       docbuildslave.vm.provider :libvirt do |v, override|
         v.memory = 2048
         v.cpus = 2
-        override.vm.box = "alxgrh/ubuntu-trusty-x86_64"
+        override.vm.box = "generic/ubuntu1804"
       end
     end
 
@@ -132,7 +137,7 @@ Vagrant.configure("2") do |config|
         clean.vm.hostname = "clean"
         clean.vm.network "private_network", ip: "192.168.100.92"
         clean.vm.provider :libvirt do |v, override|
-            override.vm.box = "alxgrh/ubuntu-trusty-x86_64"
+            override.vm.box = "generic/ubuntu1804"
         end
     end
 
@@ -180,7 +185,7 @@ Vagrant.configure("2") do |config|
         basebox.vm.provider :libvirt do |v, override|
             v.memory = 2048
             v.cpus = 2
-            override.vm.box = "alxgrh/ubuntu-trusty-x86_64"
+            override.vm.box = "generic/ubuntu1804"
         end
     end
 
@@ -196,7 +201,7 @@ Vagrant.configure("2") do |config|
         buildslavebox.vm.provider :libvirt do |v, override|
             v.memory = 2048
             v.cpus = 2
-            override.vm.box = "alxgrh/ubuntu-trusty-x86_64"
+            override.vm.box = "generic/ubuntu1804"
         end
     end
 end
