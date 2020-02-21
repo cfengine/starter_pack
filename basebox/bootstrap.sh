@@ -4,7 +4,7 @@
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get upgrade
-apt-get install -y emacs24 git nano
+apt-get install -y emacs git nano
 apt-get install -y ntp
 apt-get install -y gdb automake autoconf libtool
 apt-get install -y python-pip python3-pip
@@ -18,7 +18,7 @@ apt-get install -y nodejs npm jq
 npm install --global json5
 
 # Nova deps:
-echo 'deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' >> /etc/apt/sources.list.d/pgdg.list
+echo 'deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main' >> /etc/apt/sources.list.d/pgdg.list
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
   sudo apt-key add -
 apt-get update
@@ -43,8 +43,8 @@ function add_to_path {
     add_line_if_not_found "$line" "/root/.bash_profile"
 }
 
-apt-get install -y postgresql-10 postgresql-contrib-10 # libpq-dev pgadmin3
-add_to_path "/usr/lib/postgresql/10/bin"
+apt-get install -y postgresql-11 postgresql-contrib-11 # libpq-dev pgadmin3
+add_to_path "/usr/lib/postgresql/11/bin"
 apt-get install -y python-psycopg2
 apt-get install -y libpgtypes3 libecpg-dev libhiredis-dev libldap2-dev
 apt-get install -y python-software-properties
