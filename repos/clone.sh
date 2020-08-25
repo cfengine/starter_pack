@@ -6,6 +6,7 @@ cloner(){
     else
         git clone --recursive --origin upstream git@github.com:$1/$2.git && \
         cd $2 && \
+        git remote add origin git@github.com:$(whoami)/$2.git && \
         git fetch --all --tags && \
         cd ..
     fi
