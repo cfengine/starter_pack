@@ -46,8 +46,8 @@ def perform_step(step, repo, source, warnings, build_folder=None):
 
     autogen = "./autogen.sh -C --enable-debug" + (
         " --with-postgresql-hub=/usr" if repo == "nova" else "")
-    make = "make -j2" + (
-        " CFLAGS='-Werror -Wall -Wno-pointer-sign' LDFLAGS='-pthread'"
+    make = "make -j8" + (
+        " CFLAGS='-Werror -Wall -Wno-pointer-sign -Wno-format-truncation -Wno-format-overflow'"
         if warnings else "")
     command_dict = {
         "checkout": "git checkout {}".format(optarg),
