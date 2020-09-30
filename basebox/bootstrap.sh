@@ -26,11 +26,11 @@ function add_to_path {
 # Install a bunch of packages noninteractively:
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
-apt-get upgrade
+apt-get upgrade -y
 apt-get install -y emacs git nano
 apt-get install -y ntp
 apt-get install -y gdb automake autoconf libtool
-apt-get install -y python-pip python3-pip
+apt-get install -y python3 python-is-python3 python3-pip
 apt-get install -y libssl-dev libpcre3 libpcre3-dev
 apt-get install -y bison libbison-dev libacl1 libacl1-dev libpq-dev
 apt-get install -y lmdb-utils liblmdb-dev libpam0g-dev flex
@@ -41,16 +41,9 @@ apt-get install -y nodejs npm jq
 npm install --global json5
 
 # Nova deps:
-echo 'deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main' >> /etc/apt/sources.list.d/pgdg.list
-wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
-  sudo apt-key add -
-apt-get update
-
-apt-get install -y postgresql-11 postgresql-contrib-11 # libpq-dev pgadmin3
-add_to_path "/usr/lib/postgresql/11/bin"
-apt-get install -y python-psycopg2
+apt-get install -y postgresql-12 postgresql-contrib-12 # libpq-dev pgadmin3
 apt-get install -y libpgtypes3 libecpg-dev libldap2-dev
-apt-get install -y python-software-properties
+apt-get install -y software-properties-common
 add-apt-repository -y ppa:ondrej/php
 apt-get update
 apt-get install -y --force-yes php7.3-dev
