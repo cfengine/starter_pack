@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+set -e
+set -x
+
 function init_bashrc {
     touch /home/vagrant/.bashrc
     touch /home/vagrant/.bash_profile
