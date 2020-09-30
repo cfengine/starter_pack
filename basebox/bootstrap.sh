@@ -46,7 +46,7 @@ apt-get update
 apt-get install -y postgresql-11 postgresql-contrib-11 # libpq-dev pgadmin3
 add_to_path "/usr/lib/postgresql/11/bin"
 apt-get install -y python-psycopg2
-apt-get install -y libpgtypes3 libecpg-dev libhiredis-dev libldap2-dev
+apt-get install -y libpgtypes3 libecpg-dev libldap2-dev
 apt-get install -y python-software-properties
 add-apt-repository -y ppa:ondrej/php
 apt-get update
@@ -64,13 +64,6 @@ apt-get install -y dpkg-dev debhelper g++ libncurses5 pkg-config build-essential
 # Remove unneeded packages and cache:
 apt-get -y autoremove
 apt-get -y clean
-
-mkdir /root/redis && cd /root/redis || exit 1
-wget http://download.redis.io/releases/redis-3.2.11.tar.gz
-tar xzf redis-3.2.11.tar.gz
-cd redis-3.2.11 || exit 1
-make
-make install
 
 mkdir -p /home/vagrant/.ssh
 cp /vagrant/keys/insecure.pub /home/vagrant/.ssh/id_rsa.pub
