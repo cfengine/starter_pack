@@ -35,7 +35,7 @@ def build_cmd(cd, cmd):
     return "{} && {}".format(cd, cmd) if cmd else None
 
 
-def perform_step(step, repo, source, warnings, build_folder=None):
+def perform_step(step, repo, source, warnings, asan, build_folder=None):
     tmp_cmd = ""
     cmd_fail = None
     optarg = None
@@ -46,9 +46,11 @@ def perform_step(step, repo, source, warnings, build_folder=None):
 
     autogen = "./autogen.sh -C --enable-debug" + (
         " --with-postgresql-hub=/usr" if repo == "nova" else "")
-    make = "make -j -l8" + (
-        " CFLAGS='-Werror -Wall'"
-        if warnings else "")
+    cflags = "-Werror -Wall" if warnings else ""
+    if asan:
+        cflags += " -fsanitize=address"
+    ldflags = "-fsanitize=address" if asan else ""
+
     command_dict = {
         "checkout": "git checkout {}".format(optarg),
         "fetch": "git fetch --all",
@@ -56,7 +58,7 @@ def perform_step(step, repo, source, warnings, build_folder=None):
         "push": "git push",
         "clean": "git clean -fXd",
         "autogen": autogen,
-        "make": make,
+        "make": f"make -j -l8 CFLAGS='{cflags}' LDFLAGS='{ldflags}'",
         "install": "make -j2 install"
     }
 
@@ -69,7 +71,9 @@ def perform_step(step, repo, source, warnings, build_folder=None):
                 root=source, repo=repo, dst=build_folder))
         return build_folder
     elif step == "test":
-        tmp_cmd = "cd tests/unit && make check"
+        # Don't want warning flags when compiling tests:
+        cflags = "-fsanitize=address" if asan else ""
+        tmp_cmd = f"cd tests/unit && make check LDFLAGS='{ldflags}' CFLAGS='{cflags}'"
         cmd_fail = "cd tests/unit && cat test-suite.log"
     else:
         raise NotImplementedError()
@@ -84,12 +88,12 @@ def perform_step(step, repo, source, warnings, build_folder=None):
     return build_folder
 
 
-def build(steps, repos, source, warnings):
+def build(steps, repos, source, warnings, asan):
     build_folder = None
     for step in steps:
         for repo in repos:
             build_folder = perform_step(
-                step, repo, source, warnings, build_folder)
+                step, repo, source, warnings, asan, build_folder)
 
 
 def get_steps(args):
@@ -238,7 +242,8 @@ def get_args():
     # MISC:
     ap.add_argument(
         "--dry-run", help="Show commands to be run", action="store_true")
-    ap.add_argument("--warnings", help="WIP: -Werror", action="store_true")
+    ap.add_argument("--warnings", help="Stricter compiler", action="store_true")
+    ap.add_argument("--asan", help="AddressSanitizer", action="store_true")
 
     args = ap.parse_args()
 
@@ -264,4 +269,4 @@ if __name__ == "__main__":
     log.setLevel(logging.WARNING)
     args = get_args()
     steps, repos = get_steps(args), get_repos(args)
-    build(steps, repos, args.source, args.warnings)
+    build(steps, repos, args.source, args.warnings, args.asan)
