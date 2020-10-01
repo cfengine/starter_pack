@@ -1,27 +1,7 @@
 #!/usr/bin/env bash
 
-# Install a bunch of packages noninteractively:
-export DEBIAN_FRONTEND=noninteractive
-apt-get update
-apt-get upgrade
-apt-get install -y emacs git nano
-apt-get install -y ntp
-apt-get install -y gdb automake autoconf libtool
-apt-get install -y python-pip python3-pip
-apt-get install -y libssl-dev libpcre3 libpcre3-dev
-apt-get install -y bison libbison-dev libacl1 libacl1-dev libpq-dev
-apt-get install -y lmdb-utils liblmdb-dev libpam0g-dev flex
-apt-get install -y libtokyocabinet-dev
-apt-get install -y unzip
-apt-get install -y cargo
-apt-get install -y nodejs npm jq
-npm install --global json5
-
-# Nova deps:
-echo 'deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main' >> /etc/apt/sources.list.d/pgdg.list
-wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
-  sudo apt-key add -
-apt-get update
+set -e
+set -x
 
 function init_bashrc {
     touch /home/vagrant/.bashrc
@@ -43,11 +23,27 @@ function add_to_path {
     add_line_if_not_found "$line" "/root/.bash_profile"
 }
 
-apt-get install -y postgresql-11 postgresql-contrib-11 # libpq-dev pgadmin3
-add_to_path "/usr/lib/postgresql/11/bin"
-apt-get install -y python-psycopg2
-apt-get install -y libpgtypes3 libecpg-dev libhiredis-dev libldap2-dev
-apt-get install -y python-software-properties
+# Install a bunch of packages noninteractively:
+export DEBIAN_FRONTEND=noninteractive
+apt-get update
+apt-get upgrade -y
+apt-get install -y emacs git nano
+apt-get install -y ntp
+apt-get install -y gdb automake autoconf libtool
+apt-get install -y python3 python-is-python3 python3-pip
+apt-get install -y libssl-dev libpcre3 libpcre3-dev
+apt-get install -y bison libbison-dev libacl1 libacl1-dev libpq-dev
+apt-get install -y lmdb-utils liblmdb-dev libpam0g-dev flex
+apt-get install -y libtokyocabinet-dev
+apt-get install -y unzip
+apt-get install -y cargo
+apt-get install -y nodejs npm jq
+npm install --global json5
+
+# Nova deps:
+apt-get install -y postgresql-12 postgresql-contrib-12 # libpq-dev pgadmin3
+apt-get install -y libpgtypes3 libecpg-dev libldap2-dev
+apt-get install -y software-properties-common
 add-apt-repository -y ppa:ondrej/php
 apt-get update
 apt-get install -y --force-yes php7.3-dev
@@ -64,13 +60,6 @@ apt-get install -y dpkg-dev debhelper g++ libncurses5 pkg-config build-essential
 # Remove unneeded packages and cache:
 apt-get -y autoremove
 apt-get -y clean
-
-mkdir /root/redis && cd /root/redis || exit 1
-wget http://download.redis.io/releases/redis-3.2.11.tar.gz
-tar xzf redis-3.2.11.tar.gz
-cd redis-3.2.11 || exit 1
-make
-make install
 
 mkdir -p /home/vagrant/.ssh
 cp /vagrant/keys/insecure.pub /home/vagrant/.ssh/id_rsa.pub
