@@ -49,7 +49,7 @@ def perform_step(step, repo, source, warnings, asan, build_folder=None):
     cflags = "-Werror -Wall" if warnings else ""
     if asan:
         cflags += " -fsanitize=address"
-    ldflags = "-fsanitize=address" if asan else ""
+    ldflags = "-fsanitize=address -static-libasan" if asan else ""
 
     command_dict = {
         "checkout": "git checkout {}".format(optarg),
