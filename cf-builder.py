@@ -127,7 +127,7 @@ def get_repos(args):
     _all = args.build_all or args.all_repos
     if args.repos and not _all:
         repos += args.repos
-    if args.libntech or _all:
+    if args.libntech:
         repos.append("libntech")
     if args.core or _all:
         repos.append("core")
