@@ -23,43 +23,62 @@ function add_to_path {
     add_line_if_not_found "$line" "/root/.bash_profile"
 }
 
-# Install a bunch of packages noninteractively:
-export DEBIAN_FRONTEND=noninteractive
+# /northern.tech/cfengine/mission-portal/scripts/bootstrap.sh
+umask 0022
+
+# install the custom PHP repository
+if grep -iq ubuntu /etc/os-release; then
+    add-apt-repository -y ppa:ondrej/php
+else
+    if [ ! -f "/etc/apt/sources.list.d/sury-php.list" ]; then
+        apt-get update
+        apt-get install -y lsb-release ca-certificates apt-transport-https software-properties-common gnupg2
+        echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/sury-php.list
+        wget -qO - https://packages.sury.org/php/apt.gpg | sudo apt-key add -
+    fi
+fi
+
+# install nodejs and npm
+if [ ! -f "£/etc/apt/sources.list.d/nodesource.list" ]; then
+    curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+    apt-get install -y nodejs
+fi
+
+# install the custom PostgreSQL repository
+if [ ! -f "/etc/apt/sources.list.d/pgdg.list" ]; then
+    apt-get update
+    apt-get install -y lsb-release ca-certificates apt-transport-https software-properties-common gnupg2
+    echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+    wget -qO - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+fi
+
+# install the build and runtime dependencies
 apt-get update
-apt-get upgrade -y
-apt-get install -y emacs git nano
-apt-get install -y ntp
-apt-get install -y gdb automake autoconf libtool
-apt-get install -y python3 python-is-python3 python3-pip
-apt-get install -y libssl-dev libpcre3 libpcre3-dev
-apt-get install -y bison libbison-dev libacl1 libacl1-dev libpq-dev
-apt-get install -y lmdb-utils liblmdb-dev libpam0g-dev flex
-apt-get install -y libtokyocabinet-dev
-apt-get install -y unzip
-apt-get install -y cargo
-apt-get install -y nodejs npm jq
-npm install --global json5
-
-# Nova deps:
-apt-get install -y postgresql-12 postgresql-contrib-12 # libpq-dev pgadmin3
-apt-get install -y libpgtypes3 libecpg-dev libldap2-dev
-apt-get install -y software-properties-common
-add-apt-repository -y ppa:ondrej/php
-apt-get update
-apt-get install -y --force-yes php7.3-dev
-
-source /etc/os-release
-echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
-curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/Release.key | sudo apt-key add -
-apt-get update
-apt-get -y install podman buildah
-
-# mingw cross compile deps:
-apt-get install -y dpkg-dev debhelper g++ libncurses5 pkg-config build-essential libpam0g-dev mingw-w64
-
-# Remove unneeded packages and cache:
-apt-get -y autoremove
-apt-get -y clean
+apt-get install -y \
+    acl \
+    automake \
+    build-essential \
+    bison \
+    flex \
+    git \
+    libacl1-dev \
+    libapreq2-dev \
+    libaprutil1-dev \
+    libcurl4-openssl-dev \
+    libldap2-dev \
+    liblmdb-dev \
+    libtool \
+    libdb-dev \
+    libpam0g-dev \
+    libpcre3-dev \
+    libpq-dev \
+    libssl-dev \
+    libxml2-dev \
+    lsb-release \
+    pkg-config \
+    postgresql-13 \
+    unzip \
+    zlib1g-dev
 
 mkdir -p /home/vagrant/.ssh
 cp /vagrant/keys/insecure.pub /home/vagrant/.ssh/id_rsa.pub
