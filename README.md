@@ -237,6 +237,7 @@ vagrant up docbuildslave
 
 During provisioning it runs `_scripts/provisioning-install-build-tool-chain.sh`
 
+
 To perform a build log into docbuildslave and run `starter_pack/build-docs.sh`
 from the documentation-generator repository.
 
@@ -245,6 +246,49 @@ vagrant ssh docbuildslave
 vagrant@docbuildslave ~ $ bash /northern.tech/cfengine/documentation-generator/_scripts/starter_pack-build-docs.sh
 ```
 Browse the site in `$NTECH_ROOT/cfengine/documentation-generator/_site/index.html`
+
+#### How Nick last build successfully
+
+These are some raw notes about how I last used this successfully. I iterated until I got a successful run of jekyll, site preview didn't quite work, but it helped me iterate on fixing up links which can be difficult if the auto linking doesn't work.
+
+```
+rm -rf /northern.tech/cfengine/documentation
+rsync -avz ~/CFEngine/documentation /northern.tech/cfengine/
+rm -rf /northern.tech/cfengine/documentation-generator
+rsync -avz ~/CFEngine/documentation-generator /northern.tech/cfengine/
+
+cd /northern.tech/cfengine/core
+git checkout master
+git pull --rebase upstream  master
+
+cd /northern.tech/cfengine/mission-portal
+git checkout master
+git pull --rebase upstream  master
+
+cd /northern.tech/cfengine/nova
+git checkout master
+git pull --rebase upstream  master
+
+cd /northern.tech/cfengine/masterfiles
+git checkout master
+git pull --rebase upstream  master
+
+cd /northern.tech/cfengine/enterprise
+git checkout master
+git pull --rebase upstream  master
+
+cd /northern.tech/cfengine/nova
+git checkout master
+git pull --rebase upstream  master
+
+
+cd ~/CFEngine/starter_pack
+vagrant rsync docbuildslave
+vagrant ssh docbuildslave -c "bash /northern.tech/cfengine/documentation-generator/_scripts/starter_pack-build-docs.sh"
+
+vagrant ssh-config docbuildslave > /tmp/docbuildslave.ssh-config
+scp -rF /tmp/docbuildslave.ssh-config docbuildslave:/northern.tech/cfengine/documentation-generator/_site ./
+```
 
 ### Notes and TODOs
 
