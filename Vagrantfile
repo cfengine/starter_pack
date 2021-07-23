@@ -76,7 +76,7 @@ Vagrant.configure("2") do |config|
       docbuildslave.vm.box = "bento/ubuntu-16.04"
       docbuildslave.vm.synced_folder ".", "/vagrant", disabled: false,
                               rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
-      docbuildslave.vm.synced_folder "#{NTECH_ROOT}", "/northern.tech", disabled: false,
+      docbuildslave.vm.synced_folder "#{NTECH_ROOT}", "/northern.tech", disabled: false, type: "rsync",
                               rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
       docbuildslave.vm.network "private_network", ip: "192.168.100.101"
       docbuildslave.vm.provision "shell",
