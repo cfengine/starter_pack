@@ -90,7 +90,7 @@ Vagrant.configure("2") do |config|
       docbuildslave.vm.provider :libvirt do |v, override|
         v.memory = 2048
         v.cpus = 2
-        override.vm.box = "generic/ubuntu1804"
+        override.vm.box = "generic/ubuntu2004"
       end
     end
 
@@ -147,7 +147,7 @@ Vagrant.configure("2") do |config|
         clean.vm.hostname = "clean"
         clean.vm.network "private_network", ip: "192.168.100.92"
         clean.vm.provider :libvirt do |v, override|
-            override.vm.box = "generic/ubuntu1804"
+            override.vm.box = "generic/ubuntu2004"
         end
     end
 
@@ -195,7 +195,7 @@ Vagrant.configure("2") do |config|
         basebox.vm.provider :libvirt do |v, override|
             v.memory = 2048
             v.cpus = 2
-            override.vm.box = "generic/ubuntu1804"
+            override.vm.box = "generic/ubuntu2004"
         end
     end
 
@@ -211,7 +211,7 @@ Vagrant.configure("2") do |config|
         buildslavebox.vm.provider :libvirt do |v, override|
             v.memory = 2048
             v.cpus = 2
-            override.vm.box = "generic/ubuntu1804"
+            override.vm.box = "generic/ubuntu2004"
         end
     end
 end
