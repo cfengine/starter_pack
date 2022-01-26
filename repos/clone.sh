@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+user=${1:-$(whoami)}
+
 cloner(){
     if [ -d "$2" ]; then
         echo "$2 already exists"

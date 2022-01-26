@@ -54,6 +54,9 @@ $ sudo mkdir -p /northern.tech/cfengine
 $ export NTECH_ROOT=/northern.tech
 $ cd $NTECH_ROOT/cfengine
 $ git clone git@github.com:cfengine/starter_pack.git
+# if your local username doesn't match your github username then provide it to clone.sh
+$ bash ./starter_pack/repos/clone.sh my_github_username
+# if they match, just use:
 $ bash ./starter_pack/repos/clone.sh
 $ cd starter_pack
 ```
