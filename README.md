@@ -124,7 +124,7 @@ $ cd ../masterfiles
 $ ./configure && make && sudo make -j2 install
 $ sudo su -
 # /var/cfengine/bin/cf-key
-# /var/cfengine/bin/cf-agent --bootstrap 192.168.100.90
+# /var/cfengine/bin/cf-agent --bootstrap 192.168.56.90
 ```
 
 #### Client
@@ -135,7 +135,7 @@ $ cd /northern.tech/cfengine/core
 $ ./configure && make && sudo make -j2 install
 $ sudo su -
 # /var/cfengine/bin/cf-key
-# /var/cfengine/bin/cf-agent --bootstrap 192.168.100.90
+# /var/cfengine/bin/cf-agent --bootstrap 192.168.56.90
 ```
 
 ## build-remote on buildslave
@@ -162,10 +162,10 @@ $ vagrant up dev
 Bringing machine 'dev' up with 'virtualbox' provider...
 $ vagrant ssh dev
 vagrant@dev ~ $ ssh build@buildslave
-The authenticity of host 'buildslave (192.168.100.100)' can't be established.
+The authenticity of host 'buildslave (192.168.56.100)' can't be established.
 ECDSA key fingerprint is SHA256:VoU/qb7Y7Pt1HYBw7ze1DXHF3E99hQvhBjoUjme9+3c.
 Are you sure you want to continue connecting (yes/no)? yes
-Warning: Permanently added 'buildslave,192.168.100.100' (ECDSA) to the list of known hosts.
+Warning: Permanently added 'buildslave,192.168.56.100' (ECDSA) to the list of known hosts.
 build@buildslave:~$ logout
 Connection to buildslave closed.
 vagrant@dev ~ $ bash /northern.tech/cfengine/buildscripts/build-remote -c x64-mingw --source /northern.tech/cfengine --verbose build@buildslave
@@ -219,7 +219,7 @@ $ cd /northern.tech/cfengine/starter_pack
 $ python3 cf-builder.py --install --all-repos
 $ /var/cfengine/bin/cf-key
 $ bash scripts/initdb.sh
-$ /var/cfengine/bin/cf-agent --bootstrap 192.168.100.90
+$ /var/cfengine/bin/cf-agent --bootstrap 192.168.56.90
 ```
 
 ### WIP! Running no-install reporting test
