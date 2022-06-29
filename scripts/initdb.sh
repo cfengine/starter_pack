@@ -19,8 +19,3 @@ psql -d cfdb -f $base_dir/nova/db/schema.sql > /dev/null 2>&1
 psql -d cfsettings -f $base_dir/nova/db/schema_settings.sql > /dev/null 2>&1
 psql -d cfsettings -f $base_dir/nova/db/ootb_settings.sql > /dev/null 2>&1
 psql -d cfsettings -f $base_dir/nova/db/cfsettings-setadminpassword.sql > /dev/null 2>&1
-
-echo "================================= REDIS ================================"
-echo "Starting redis"
-redis-server /northern.tech/cfengine/nova/tests/reporting/redis.conf
-cp /northern.tech/cfengine/nova/tests/reporting/redis.conf /var/cfengine/config/redis.conf
