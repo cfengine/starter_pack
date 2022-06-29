@@ -20,7 +20,7 @@ apt-get install -y libexpat1-dev
 dpkg --add-architecture i386
 apt-get update -qy
 apt-get install -qy wine-development:i386 mingw-w64
-apt-get install -qy bison flex ntp dpkg-dev python debhelper pkg-config default-jre-headless psmisc zip libmodule-load-conditional-perl
+apt-get install -qy bison flex ntp dpkg-dev python debhelper pkg-config default-jre-headless psmisc zip libmodule-load-conditional-perl python3-pip
 
 # Remove unneeded packages and cache:
 # for some reason libltdl7 must not be installed so let's make sure it really isn't
