@@ -24,7 +24,7 @@ apt-get install -qy bison flex ntp dpkg-dev python debhelper pkg-config default-
 
 # Remove unneeded packages and cache:
 # for some reason libltdl7 must not be installed so let's make sure it really isn't
-apt-get -y remove libltdl7
+apt-get -y remove libltdl7 libltdl7:i386
 apt-get -y autoremove
 apt-get clean
 
