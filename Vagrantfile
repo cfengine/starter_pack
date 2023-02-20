@@ -55,7 +55,7 @@ Vagrant.configure("2") do |config|
     # Main development machine:
     config.vm.define "dev", primary: true, autostart: false do |dev|
       dev.vm.hostname = "dev"
-      dev.vm.network "private_network", ip: "192.168.100.10"
+      dev.vm.network "private_network", ip: "192.168.56.10"
       # Doesn't work in libvirt:
       # dev.vm.network "private_network", ip: "fde4:8dba:82e1::c4"
       dev.vm.provider "virtualbox" do |v|
@@ -78,7 +78,7 @@ Vagrant.configure("2") do |config|
                               rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
       docbuildslave.vm.synced_folder "#{NTECH_ROOT}", "/northern.tech", disabled: false, type: "rsync",
                               rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
-      docbuildslave.vm.network "private_network", ip: "192.168.100.101"
+      docbuildslave.vm.network "private_network", ip: "192.168.56.101"
       docbuildslave.vm.provision "shell",
                           name: "Installing Jekyll and the CFEngine documentation tool-chain",
                           privileged: false,
@@ -101,7 +101,7 @@ Vagrant.configure("2") do |config|
                                 rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
         buildslave.vm.synced_folder "#{NTECH_ROOT}", "/northern.tech", disabled: true,
                                 rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
-        buildslave.vm.network "private_network", ip: "192.168.100.100"
+        buildslave.vm.network "private_network", ip: "192.168.56.100"
         buildslave.vm.provider "virtualbox" do |v|
             v.memory = 2048
             v.cpus = 4
@@ -131,21 +131,21 @@ Vagrant.configure("2") do |config|
     # Hub test machine:
     config.vm.define "hub", autostart: false do |hub|
         hub.vm.hostname = "hub"
-        hub.vm.network "private_network", ip: "192.168.100.90"
+        hub.vm.network "private_network", ip: "192.168.56.90"
         hub.vm.network :forwarded_port, guest: 443, host: 9002
     end
 
     # Client test machine:
     config.vm.define "client", autostart: false do |client|
         client.vm.hostname = "client"
-        client.vm.network "private_network", ip: "192.168.100.91"
+        client.vm.network "private_network", ip: "192.168.56.91"
     end
 
     # Clean test machine:
     config.vm.define "clean", autostart: false do |clean|
         clean.vm.box = "ubuntu/focal64"
         clean.vm.hostname = "clean"
-        clean.vm.network "private_network", ip: "192.168.100.92"
+        clean.vm.network "private_network", ip: "192.168.56.92"
         clean.vm.provider :libvirt do |v, override|
             override.vm.box = "generic/ubuntu2004"
         end
@@ -156,7 +156,7 @@ Vagrant.configure("2") do |config|
         centos.vm.box = "centos/7"
         centos.vm.hostname = "centos"
         centos.vm.provision "bootstrap", type: "shell", path: "scripts/centos.sh"
-        centos.vm.network "private_network", ip: "192.168.100.93"
+        centos.vm.network "private_network", ip: "192.168.56.93"
     end
 
     # ============================ DEMO MACHINES: ============================
@@ -164,21 +164,21 @@ Vagrant.configure("2") do |config|
     # Hub test machine:
     config.vm.define "alice", autostart: false do |alice|
         alice.vm.hostname = "alice"
-        alice.vm.network "private_network", ip: "192.168.100.94"
+        alice.vm.network "private_network", ip: "192.168.56.94"
         alice.vm.network :forwarded_port, guest: 443, host: 9002
     end
 
     # Client test machine:
     config.vm.define "bob", autostart: false do |bob|
         bob.vm.hostname = "bob"
-        bob.vm.network "private_network", ip: "192.168.100.95"
+        bob.vm.network "private_network", ip: "192.168.56.95"
     end
 
     config.vm.define "charlie", autostart: false do |charlie|
         charlie.vm.box = "centos/7"
         charlie.vm.hostname = "charlie"
         charlie.vm.provision "bootstrap", type: "shell", path: "scripts/centos.sh"
-        charlie.vm.network "private_network", ip: "192.168.100.96"
+        charlie.vm.network "private_network", ip: "192.168.56.96"
     end
 
     # =============================== BASE BOX: ==============================
