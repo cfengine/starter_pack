@@ -295,6 +295,25 @@ vagrant ssh-config docbuildslave > /tmp/docbuildslave.ssh-config
 scp -rF /tmp/docbuildslave.ssh-config docbuildslave:/northern.tech/cfengine/documentation-generator/_site ./
 ```
 
+### Installing a pre-built hub package
+
+The `hub` VM comes with dependencies already installed to make it easy to build and install CFEngine Enterprise hub locally.
+If you would rather install a pre-built hub package, remove PostgreSQL:
+
+```
+apt purge postgresql*
+wget http://buildcache.cfengine.com/packages/testing-pr/jenkins-pr-pipeline-9281/PACKAGES_HUB_x86_64_linux_ubuntu_20/cfengine-nova-hub_3.22.0a.8c38b8b08~25630.ubuntu20_amd64.deb
+sudo dpkg -i cfengine-nova-hub_*.deb
+sudo /var/cfengine/bin/cf-agent -B 192.168.56.90
+```
+
+(This is just an example using the URL from a PR build, replace the 2nd line with the hub package you want to test, or use cf-remote, etc.)
+
+You should be able to open MP in your browser with the IP afterwards:
+
+https://192.168.56.90/
+
+
 ### Notes and TODOs
 
 The .git subdirectories get deleted during `_run_jekyll.sh` but I don't know
