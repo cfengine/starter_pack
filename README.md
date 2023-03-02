@@ -75,6 +75,17 @@ This will be installed to `~/.ssh/id_rsa[.pub]` on all vagrant machines.
 
 The `Vagrantfile` also has code to copy your SSH key from your home directory, to `authorized_keys` in the VMs, so you can use regular `ssh` commands (instead of `vagrant ssh`).
 
+### Custom init script
+
+If you'd like to make custom changes to the VMs, such as fixing your `PATH` variable, or installing your own dotfiles, you can put code in the file `./scripts/custom_vm_init.sh`.
+This file is ignored by git, so won't be committed, it will be custom to you.
+As an example, here is what I (Ole) have in my `./scripts/custom_vm_init.sh`:
+
+```
+#!/usr/bin/env bash
+curl -L -s https://raw.githubusercontent.com/olehermanse/dotfiles/master/install.sh | bash
+```
+
 ## Getting started with the dev machine
 The development machine has all development libraries already installed.
 It is ready to run autogen, make etc.
