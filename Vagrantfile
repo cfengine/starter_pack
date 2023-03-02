@@ -16,6 +16,15 @@ Vagrant.configure("2") do |config|
     # make sure SSH always has host keys
     config.vm.provision "ssh-host-keys", type: "shell", path: "scripts/ssh-host-keys.sh"
 
+    # Enable using normal ssh command by copying your normal SSH key into VM:
+    config.vm.provision "shell" do |s|
+      ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
+      s.inline = <<-SHELL
+        echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+        echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
+      SHELL
+    end
+
     # Run bootstrap.sh script on first boot:
     config.vm.provision "bootstrap", type: "shell", path: "bootstrap.sh"
     config.vm.synced_folder  ".", "/vagrant",

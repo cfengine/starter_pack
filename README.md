@@ -73,6 +73,19 @@ Will generate `./keys/insecure[.pub]`.
 This will be installed to `~/.ssh/id_rsa[.pub]` on all vagrant machines.
 `./keys/insecure.pub` is added to build user's `authorized_keys` so build-remote can work.
 
+The `Vagrantfile` also has code to copy your SSH key from your home directory, to `authorized_keys` in the VMs, so you can use regular `ssh` commands (instead of `vagrant ssh`).
+
+### Custom init script
+
+If you'd like to make custom changes to the VMs, such as fixing your `PATH` variable, or installing your own dotfiles, you can put code in the file `./scripts/custom_vm_init.sh`.
+This file is ignored by git, so won't be committed, it will be custom to you.
+As an example, here is what I (Ole) have in my `./scripts/custom_vm_init.sh`:
+
+```
+#!/usr/bin/env bash
+curl -L -s https://raw.githubusercontent.com/olehermanse/dotfiles/master/install.sh | bash
+```
+
 ## Getting started with the dev machine
 The development machine has all development libraries already installed.
 It is ready to run autogen, make etc.
@@ -292,6 +305,25 @@ vagrant ssh docbuildslave -c "bash /northern.tech/cfengine/documentation-generat
 vagrant ssh-config docbuildslave > /tmp/docbuildslave.ssh-config
 scp -rF /tmp/docbuildslave.ssh-config docbuildslave:/northern.tech/cfengine/documentation-generator/_site ./
 ```
+
+### Installing a pre-built hub package
+
+The `hub` VM comes with dependencies already installed to make it easy to build and install CFEngine Enterprise hub locally.
+If you would rather install a pre-built hub package, remove PostgreSQL:
+
+```
+apt purge postgresql*
+wget http://buildcache.cfengine.com/packages/testing-pr/jenkins-pr-pipeline-9281/PACKAGES_HUB_x86_64_linux_ubuntu_20/cfengine-nova-hub_3.22.0a.8c38b8b08~25630.ubuntu20_amd64.deb
+sudo dpkg -i cfengine-nova-hub_*.deb
+sudo /var/cfengine/bin/cf-agent -B 192.168.56.90
+```
+
+(This is just an example using the URL from a PR build, replace the 2nd line with the hub package you want to test, or use cf-remote, etc.)
+
+You should be able to open MP in your browser with the IP afterwards:
+
+https://192.168.56.90/
+
 
 ### Notes and TODOs
 
