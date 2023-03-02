@@ -73,6 +73,8 @@ Will generate `./keys/insecure[.pub]`.
 This will be installed to `~/.ssh/id_rsa[.pub]` on all vagrant machines.
 `./keys/insecure.pub` is added to build user's `authorized_keys` so build-remote can work.
 
+The `Vagrantfile` also has code to copy your SSH key from your home directory, to `authorized_keys` in the VMs, so you can use regular `ssh` commands (instead of `vagrant ssh`).
+
 ## Getting started with the dev machine
 The development machine has all development libraries already installed.
 It is ready to run autogen, make etc.
