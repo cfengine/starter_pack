@@ -41,6 +41,12 @@ Vagrant.configure("2") do |config|
         vb.customize [ "guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 1000 ]
     end
 
+    # Synchonize clock with host OS to avoid clock skew when using tools like
+    # Make and rsync. Only do this if "vagrant-timezone" plugin is installed.
+    if Vagrant.has_plugin?("vagrant-timezone")
+        config.timezone.value = :host
+    end
+
     # https://bugs.launchpad.net/cloud-images/+bug/1874453
     NOW = Time.now.strftime("%d.%m.%Y.%H:%M:%S")
     FILENAME = "serial-debug-%s.log" % NOW

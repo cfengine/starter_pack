@@ -19,6 +19,12 @@ Install guest additions plugin:
 $ vagrant plugin install vagrant-vbguest
 ```
 
+**Optional:** Install timezone plugin to avoid clock-skew when using tools like
+Make and rsync on shared files.
+```
+$ vagrant plugin install vagrant-timezone
+```
+
 It is also possible to use libvirt (KVM) instead of VirtualBox. Apart from the
 working `qemu-kvm` setup and `libvirt`, the `vagrant-libvirt` plugin has to be
 installed too. It may either be provided as a package in your distribution or it
