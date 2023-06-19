@@ -28,7 +28,11 @@ def run_command(command, on_failure=None):
         if on_failure:
             print("Triggered: {}".format(on_failure))
             os.system(on_failure)
-        sys.exit(r)
+        # Fun stuff: The return value of os.system is a 2 byte int, whose
+        # upper byte is the exit code. (Lower byte is signal number).
+        # Thus, a command with exit code of 1 means r = 256 here.
+        # sys.exit(256) == sys.exit(0), so don't do that :)
+        sys.exit(1) # We don't care why it failed, just make sure we fail(!)
 
 
 def build_cmd(cd, cmd):
