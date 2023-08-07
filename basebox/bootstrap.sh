@@ -25,7 +25,7 @@ function add_to_path {
 
 # Install a bunch of packages noninteractively:
 export DEBIAN_FRONTEND=noninteractive
-apt-get update
+apt-get update -y
 apt-get upgrade -y
 apt-get install -y emacs git nano
 apt-get install -y ntp
@@ -37,29 +37,48 @@ apt-get install -y lmdb-utils liblmdb-dev libpam0g-dev flex
 apt-get install -y libtokyocabinet-dev
 apt-get install -y unzip
 apt-get install -y cargo
-apt-get install -y nodejs npm jq
-npm install --global json5
+apt-get install -y jq
 
 # Nova deps:
 apt-get install -y postgresql-12 postgresql-contrib-12 # libpq-dev pgadmin3
 apt-get install -y libpgtypes3 libecpg-dev libldap2-dev
 apt-get install -y software-properties-common
 add-apt-repository -y ppa:ondrej/php
-apt-get update
+apt-get update -y
 apt-get install -y --force-yes php7.3-dev
-
-source /etc/os-release
-echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
-curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/Release.key | sudo apt-key add -
-apt-get update
-apt-get -y install podman buildah
 
 # mingw cross compile deps:
 apt-get install -y dpkg-dev debhelper g++ libncurses5 pkg-config build-essential libpam0g-dev mingw-w64
 
+# source /etc/os-release
+# echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
+# curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/Release.key | sudo apt-key add -
+# apt-get update
+# apt-get -y install podman buildah
+
+apt-get install -y ca-certificates curl gnupg
+install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+chmod a+r /etc/apt/keyrings/docker.gpg
+echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  tee /etc/apt/sources.list.d/docker.list > /dev/null
+apt-get -y update
+apt-get -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+apt-get purge nodejs
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+apt-get install -y nodejs
+
+npm install --global json5
+
 # Remove unneeded packages and cache:
 apt-get -y autoremove
 apt-get -y clean
+
+echo "vm.max_map_count=262144" >> /etc/sysctl.conf
+sudo sysctl -p
 
 mkdir -p /home/vagrant/.ssh
 cp /vagrant/keys/insecure.pub /home/vagrant/.ssh/id_rsa.pub
