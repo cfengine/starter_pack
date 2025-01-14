@@ -41,7 +41,7 @@ apt-get install -y jq
 
 # Nova deps:
 apt-get install -y postgresql-12 postgresql-contrib-12 # libpq-dev pgadmin3
-apt-get install -y libpgtypes3 libecpg-dev libldap2-dev
+apt-get install -y libpgtypes3 libecpg-dev libldap2-dev librsync-dev
 apt-get install -y software-properties-common
 add-apt-repository -y ppa:ondrej/php
 apt-get update -y
