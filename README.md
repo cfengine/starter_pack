@@ -17,7 +17,7 @@ https://www.vagrantup.com/docs/installation/
 Install guest additions plugin:
 
 ```
-$ vagrant plugin install vagrant-vbguest
+vagrant plugin install vagrant-vbguest
 ```
 
 It is also possible to use libvirt (KVM) instead of VirtualBox. Apart from the
@@ -26,7 +26,7 @@ installed too. It may either be provided as a package in your distribution or it
 can be installed by vagrant itself:
 
 ```
-$ vagrant plugin install vagrant-libvirt
+vagrant plugin install vagrant-libvirt
 ```
 
 Please see the [libvirt notes](#libvirt-notes) section for some more details and
@@ -54,15 +54,24 @@ If you use another path, you will have to update Vagrantfile and bash scripts.
 Something like this does the job:
 
 ```
-$ sudo mkdir -p /northern.tech/cfengine
-$ export NTECH_ROOT=/northern.tech
-$ cd $NTECH_ROOT/cfengine
-$ git clone git@github.com:cfengine/starter_pack.git
-# if your local username doesn't match your github username then provide it to clone.sh
-$ bash ./starter_pack/repos/clone.sh my_github_username
-# if they match, just use:
-$ bash ./starter_pack/repos/clone.sh
-$ cd starter_pack
+sudo mkdir -p /northern.tech/cfengine
+export NTECH_ROOT=/northern.tech
+cd $NTECH_ROOT/cfengine
+git clone git@github.com:cfengine/starter_pack.git
+```
+
+If your local username doesn't match your github username then provide it to clone.sh
+
+```
+bash ./starter_pack/repos/clone.sh my_github_username
+cd starter_pack
+```
+
+If they match, just use:
+
+```
+bash ./starter_pack/repos/clone.sh
+cd starter_pack
 ```
 
 **Note:** The `clone.sh` script clones all CFEngine repos into the current directory
@@ -103,7 +112,7 @@ The vagrant VMs use a custom base box where some dependencies are installed.
 To create this box locally, run:
 
 ```
-$ bash ./basebox/create.sh
+bash ./basebox/create.sh
 ```
 
 (vagrant required).
@@ -113,14 +122,19 @@ If you're not using vagrant, you can run/adapt that script on a build/developmen
 ### Starting the development machine
 
 ```
-$ vagrant up dev
+vagrant up dev
 ```
 
 If you ever need a clean dev machine, log out and:
 
 ```
-$ vagrant destroy dev
-$ vagrant up dev
+vagrant destroy dev
+```
+
+followed by:
+
+```
+vagrant up dev
 ```
 
 This is great, because you don't have to be careful not to mess up your dev machine.
@@ -128,41 +142,82 @@ You can always get a new one within a minute.
 
 ### Compiling CFEngine Community in the development machine
 
+Login to dev machine:
+
 ```
-$ vagrant ssh dev
-$ cd /northern.tech/cfengine/core
-$ ./autogen.sh --enable-debug
-$ make -j2
-$ cd ../masterfiles
-$ ./autogen.sh --enable-debug
+vagrant ssh dev
+```
+
+Configure and compile CFEngine Core:
+
+```
+cd /northern.tech/cfengine/core
+./autogen.sh --enable-debug
+make -j2
+```
+
+Configure the Masterfiles Policy Framework:
+
+```
+cd ../masterfiles
+./autogen.sh --enable-debug
 ```
 
 ### Installing CFEngine Community on a test machine
 
 #### Hub
 
+Bring up and login to the hub machine:
+
 ```
-$ vagrant up hub
-$ vagrant ssh hub
-$ cd /northern.tech/cfengine/core
-$ ./configure && make && sudo make -j2 install
-$ cd ../masterfiles
-$ ./configure && make && sudo make -j2 install
-$ sudo su -
-# /var/cfengine/bin/cf-key
-# /var/cfengine/bin/cf-agent --bootstrap 192.168.56.90
+vagrant up hub
+vagrant ssh hub
 ```
+
+Configure, compile and install CFEngine Core:
+
+```
+cd /northern.tech/cfengine/core
+./configure && make && sudo make -j2 install
+```
+
+Configure and install the Masterfiles Policy Framework:
+
+```
+cd ../masterfiles
+./configure && make && sudo make -j2 install
+```
+
+Generate keys and bootstrap to self (as root):
+
+```
+sudo /var/cfengine/bin/cf-key
+sudo /var/cfengine/bin/cf-agent --bootstrap 192.168.56.90
+```
+
+**Note:** You could use `localhost` as the IP, but this would prevent other hosts from bootstrapping to the hub.
 
 #### Client
 
+Bring up and login to the hub machine:
+
 ```
-$ vagrant up client
-$ vagrant ssh client
-$ cd /northern.tech/cfengine/core
-$ ./configure && make && sudo make -j2 install
-$ sudo su -
-# /var/cfengine/bin/cf-key
-# /var/cfengine/bin/cf-agent --bootstrap 192.168.56.90
+vagrant up client
+vagrant ssh client
+```
+
+Configure, compile and install CFEngine Core:
+
+```
+cd /northern.tech/cfengine/core
+./configure && make && sudo make -j2 install
+```
+
+Generate keys and bootstrap to hub:
+
+```
+sudo /var/cfengine/bin/cf-key
+sudo /var/cfengine/bin/cf-agent --bootstrap 192.168.56.90
 ```
 
 ## build-remote on buildslave
@@ -176,27 +231,50 @@ Running `build-remote` from `dev` VM to `buildslave` VM is the easiest.
 If you haven't already, create the buildslave base box:
 
 ```
-$ bash ./buildslave/create.sh
+bash ./buildslave/create.sh
 ```
 
 This VM has some extra dependencies for performing buildslave tasks.
-You can now use build-remote from dev machine to build on buildslave:
+You can now use build-remote from dev machine to build on buildslave.
+
+Bring up the build machine:
 
 ```
-$ vagrant up buildslave
-Bringing machine 'buildslave' up with 'virtualbox' provider...
-$ vagrant up dev
-Bringing machine 'dev' up with 'virtualbox' provider...
-$ vagrant ssh dev
-vagrant@dev ~ $ ssh build@buildslave
+vagrant up buildslave
+```
+
+Bring up and login to the dev machine:
+
+```
+vagrant up dev
+vagrant ssh dev
+```
+
+Login to buildmachine from dev machine:
+
+```
+ssh build@buildslave
+```
+
+Answer yes to verify the authenticity of the host:
+
+```
 The authenticity of host 'buildslave (192.168.56.100)' can't be established.
 ECDSA key fingerprint is SHA256:VoU/qb7Y7Pt1HYBw7ze1DXHF3E99hQvhBjoUjme9+3c.
 Are you sure you want to continue connecting (yes/no)? yes
 Warning: Permanently added 'buildslave,192.168.56.100' (ECDSA) to the list of known hosts.
-build@buildslave:~$ logout
-Connection to buildslave closed.
-vagrant@dev ~ $ bash /northern.tech/cfengine/buildscripts/build-remote -c x64-mingw --source /northern.tech/cfengine --verbose build@buildslave
-[...]
+```
+
+Type logout or simply press `CTRL + D` to return to the dev machine:
+
+```
+logout
+```
+
+From the dev machine, execute the build-remote script:
+
+```
+bash /northern.tech/cfengine/buildscripts/build-remote -c x64-mingw --source /northern.tech/cfengine --verbose build@buildslave
 ```
 
 This currently works for building dependencies as well as our binaries, but not packaging.
@@ -209,20 +287,29 @@ You can then install the package once, and as you make changes, upload the local
 
 ### Compiling core, enterprise and nova on the dev machine
 
+Bring up and login to the dev machine:
+
+```
+vagrant up dev
+vagrant ssh dev
+```
+
 Using `cf-builder.py`:
 
 ```
-$ vagrant up dev
-$ vagrant ssh dev
-$ cd /northern.tech/cfengine/starter_pack
-$ python3 cf-builder.py --autogen --make --core --masterfiles --enterprise --nova
+cd /northern.tech/cfengine/starter_pack
+python3 cf-builder.py --autogen --make --core --masterfiles --enterprise --nova
 ```
 
-The individual steps:
+By running:
 
 ```
-$ python3 cf-builder.py --build-all --dry-run
+python3 cf-builder.py --build-all --dry-run
+```
 
+the individual steps will be outputted:
+
+```
 These commands would run if you didn't specify --dry-run:
 cd /northern.tech/cfengine && cd core && ./autogen.sh --enable-debug
 cd /northern.tech/cfengine && cd core && make -j2
@@ -234,23 +321,34 @@ cd /northern.tech/cfengine && cd nova && make -j2
 
 (You can run the steps without using `cf-builder.py`, simplify the `cd` commands if you'd like)
 
-### WIP! Installing CFEngine on hub machine
+### WIP! Installing CFEngine Enterprise on hub machine
 
 In general, don't install on your dev machine, and don't run sudo commands on the dev machine.
 Everything you're doing there should work without sudo.
 Use the `hub` and `client` machines to install and bootstrap.
 
-After compiling on `dev` machine, use `cf-builder.py` to install on `hub`:
+After compiling on `dev` machine, use `cf-builder.py` to install on `hub`.
+
+Bring up and login to the hub machine:
 
 ```
-$ vagrant up hub
-$ vagrant ssh hub
-$ sudo su
-$ cd /northern.tech/cfengine/starter_pack
-$ python3 cf-builder.py --install --all-repos
-$ /var/cfengine/bin/cf-key
-$ bash scripts/initdb.sh
-$ /var/cfengine/bin/cf-agent --bootstrap 192.168.56.90
+vagrant up hub
+vagrant ssh hub
+```
+
+Install CFEngine Enterprise (as root):
+
+```
+cd /northern.tech/cfengine/starter_pack
+sudo python3 cf-builder.py --install --all-repos
+```
+
+Generate keys, initialize the database and bootstrap to self (as root):
+
+```
+sudo /var/cfengine/bin/cf-key
+sudo bash scripts/initdb.sh
+sudo /var/cfengine/bin/cf-agent --bootstrap 192.168.56.90
 ```
 
 ### WIP! Running no-install reporting test
@@ -293,28 +391,27 @@ rsync -avz ~/CFEngine/documentation-generator /northern.tech/cfengine/
 
 cd /northern.tech/cfengine/core
 git checkout master
-git pull --rebase upstream  master
+git pull --rebase upstream master
 
 cd /northern.tech/cfengine/mission-portal
 git checkout master
-git pull --rebase upstream  master
+git pull --rebase upstream master
 
 cd /northern.tech/cfengine/nova
 git checkout master
-git pull --rebase upstream  master
+git pull --rebase upstream master
 
 cd /northern.tech/cfengine/masterfiles
 git checkout master
-git pull --rebase upstream  master
+git pull --rebase upstream master
 
 cd /northern.tech/cfengine/enterprise
 git checkout master
-git pull --rebase upstream  master
+git pull --rebase upstream master
 
 cd /northern.tech/cfengine/nova
 git checkout master
-git pull --rebase upstream  master
-
+git pull --rebase upstream master
 
 cd ~/CFEngine/starter_pack
 vagrant rsync docbuildslave
@@ -371,10 +468,10 @@ vagrant-libvirt doesn't support the mechanisms for sharing folders between VMs
 and the host system. So it either uses _rsync_ to sync the folders (that's why
 we have some extra rsync options in the `Vagrantfile`) or sets up NFS to share
 the folders. However, it quite often fails to set NFS up properly, so it may be
-necesary to enforce rsync syncing. This can be done by adding `type: "rsync"` to
+necessary to enforce rsync syncing. This can be done by adding `type: "rsync"` to
 the `synced_folder` lines. So something like this:
 
 ```
--    config.vm.synced_folder  ".", "/vagrant",
-+    config.vm.synced_folder  ".", "/vagrant", type: "rsync",
+-    config.vm.synced_folder ".", "/vagrant",
++    config.vm.synced_folder ".", "/vagrant", type: "rsync",
 ```
