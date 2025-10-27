@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
     # Use a custom box:
     # https://scotch.io/tutorials/how-to-create-a-vagrant-base-box-from-an-existing-one
     config.vm.box = "basebox"
-    # config.vm.box = "ubuntu/focal64"
+    # config.vm.box = "ubuntu/jammy64"
 
     # make sure SSH always has host keys
     config.vm.provision "ssh-host-keys", type: "shell", path: "scripts/ssh-host-keys.sh"
@@ -152,7 +152,7 @@ Vagrant.configure("2") do |config|
 
     # Clean test machine:
     config.vm.define "clean", autostart: false do |clean|
-        clean.vm.box = "ubuntu/focal64"
+        clean.vm.box = "ubuntu/jammy64"
         clean.vm.hostname = "clean"
         clean.vm.network "private_network", ip: "192.168.56.92"
         clean.vm.provider :libvirt do |v, override|
@@ -194,7 +194,7 @@ Vagrant.configure("2") do |config|
 
     # Prepackage a box on disk:
     config.vm.define "basebox", autostart: false do |basebox|
-        basebox.vm.box = "ubuntu/focal64"
+        basebox.vm.box = "ubuntu/jammy64"
         basebox.vm.provision "bootstrap", type: "shell", path: "basebox/bootstrap.sh"
         basebox.ssh.insert_key = false
         basebox.vm.provider "virtualbox" do |v|
@@ -210,7 +210,7 @@ Vagrant.configure("2") do |config|
 
     # Prepackage a box on disk:
     config.vm.define "buildslavebox", autostart: false do |buildslavebox|
-        buildslavebox.vm.box = "ubuntu/focal64"
+        buildslavebox.vm.box = "ubuntu/jammy64"
         buildslavebox.vm.provision "bootstrap", type: "shell", path: "buildslave/bootstrap.sh"
         buildslavebox.ssh.insert_key = false
         buildslavebox.vm.provider "virtualbox" do |v|
