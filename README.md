@@ -15,6 +15,7 @@ Install vagrant:
 https://www.vagrantup.com/docs/installation/
 
 Install guest additions plugin:
+
 ```
 $ vagrant plugin install vagrant-vbguest
 ```
@@ -23,9 +24,11 @@ It is also possible to use libvirt (KVM) instead of VirtualBox. Apart from the
 working `qemu-kvm` setup and `libvirt`, the `vagrant-libvirt` plugin has to be
 installed too. It may either be provided as a package in your distribution or it
 can be installed by vagrant itself:
+
 ```
 $ vagrant plugin install vagrant-libvirt
 ```
+
 Please see the [libvirt notes](#libvirt-notes) section for some more details and
 suggestions.
 
@@ -49,6 +52,7 @@ It is not a strict requirement, it's just easier.
 If you use another path, you will have to update Vagrantfile and bash scripts.
 
 Something like this does the job:
+
 ```
 $ sudo mkdir -p /northern.tech/cfengine
 $ export NTECH_ROOT=/northern.tech
@@ -87,35 +91,43 @@ curl -L -s https://raw.githubusercontent.com/olehermanse/dotfiles/master/install
 ```
 
 ## Getting started with the dev machine
+
 The development machine has all development libraries already installed.
 It is ready to run autogen, make etc.
 It will **NOT** work with `build-remote`.
 (See the sections on the buildslave machine below.)
 
 ### Creating a base box for development
+
 The vagrant VMs use a custom base box where some dependencies are installed.
 To create this box locally, run:
+
 ```
 $ bash ./basebox/create.sh
 ```
+
 (vagrant required).
 This will run commands from `basebox/bootstrap.sh` on an Ubuntu VM.
 If you're not using vagrant, you can run/adapt that script on a build/development machine of your choice.
 
 ### Starting the development machine
+
 ```
 $ vagrant up dev
 ```
 
 If you ever need a clean dev machine, log out and:
+
 ```
 $ vagrant destroy dev
 $ vagrant up dev
 ```
+
 This is great, because you don't have to be careful not to mess up your dev machine.
 You can always get a new one within a minute.
 
 ### Compiling CFEngine Community in the development machine
+
 ```
 $ vagrant ssh dev
 $ cd /northern.tech/cfengine/core
@@ -128,6 +140,7 @@ $ ./autogen.sh --enable-debug
 ### Installing CFEngine Community on a test machine
 
 #### Hub
+
 ```
 $ vagrant up hub
 $ vagrant ssh hub
@@ -141,6 +154,7 @@ $ sudo su -
 ```
 
 #### Client
+
 ```
 $ vagrant up client
 $ vagrant ssh client
@@ -196,6 +210,7 @@ You can then install the package once, and as you make changes, upload the local
 ### Compiling core, enterprise and nova on the dev machine
 
 Using `cf-builder.py`:
+
 ```
 $ vagrant up dev
 $ vagrant ssh dev
@@ -204,6 +219,7 @@ $ python3 cf-builder.py --autogen --make --core --masterfiles --enterprise --nov
 ```
 
 The individual steps:
+
 ```
 $ python3 cf-builder.py --build-all --dry-run
 
@@ -215,6 +231,7 @@ cd /northern.tech/cfengine && cd enterprise && make -j2
 cd /northern.tech/cfengine && cd nova && ./autogen.sh --enable-debug --with-postgresql-hub=/usr
 cd /northern.tech/cfengine && cd nova && make -j2
 ```
+
 (You can run the steps without using `cf-builder.py`, simplify the `cd` commands if you'd like)
 
 ### WIP! Installing CFEngine on hub machine
@@ -224,6 +241,7 @@ Everything you're doing there should work without sudo.
 Use the `hub` and `client` machines to install and bootstrap.
 
 After compiling on `dev` machine, use `cf-builder.py` to install on `hub`:
+
 ```
 $ vagrant up hub
 $ vagrant ssh hub
@@ -253,7 +271,6 @@ vagrant up docbuildslave
 
 During provisioning it runs `_scripts/provisioning-install-build-tool-chain.sh`
 
-
 To perform a build log into docbuildslave and run `starter_pack/build-docs.sh`
 from the documentation-generator repository.
 
@@ -261,6 +278,7 @@ from the documentation-generator repository.
 vagrant ssh docbuildslave
 vagrant@docbuildslave ~ $ bash /northern.tech/cfengine/documentation-generator/_scripts/starter_pack-build-docs.sh
 ```
+
 Browse the site in `$NTECH_ROOT/cfengine/documentation-generator/_site/index.html`
 
 #### How Nick last build successfully
@@ -324,7 +342,6 @@ You should be able to open MP in your browser with the IP afterwards:
 
 https://192.168.56.90/
 
-
 ### Notes and TODOs
 
 The .git subdirectories get deleted during `_run_jekyll.sh` but I don't know
@@ -342,7 +359,7 @@ rsync -avz $NTECH_ROOT/cfengine/documentation $HOME/CFEngine/documentation/
 There is a step in the `create.sh` scripts for building baseboxes where they try
 to package the box (e.g. `vagrant package basebox --output base.box`). This may
 fail due to the VM image file not being readable for the current user. However,
-*vagrant* even prints out the command to fix it (change the permissions) so just
+_vagrant_ even prints out the command to fix it (change the permissions) so just
 run the suggested command. Unfortunately, the `create.sh` script stops on this
 so the particular step has to be run again and then all the follow-up steps have
 to be run. It would be nice if the permissions could be fixed in advance, but
@@ -351,11 +368,12 @@ there seems to be no easy way to get the image path for a given vagrant machine.
 ### Synced folders
 
 vagrant-libvirt doesn't support the mechanisms for sharing folders between VMs
-and the host system. So it either uses *rsync* to sync the folders (that's why
+and the host system. So it either uses _rsync_ to sync the folders (that's why
 we have some extra rsync options in the `Vagrantfile`) or sets up NFS to share
 the folders. However, it quite often fails to set NFS up properly, so it may be
 necesary to enforce rsync syncing. This can be done by adding `type: "rsync"` to
 the `synced_folder` lines. So something like this:
+
 ```
 -    config.vm.synced_folder  ".", "/vagrant",
 +    config.vm.synced_folder  ".", "/vagrant", type: "rsync",
