@@ -119,6 +119,23 @@ bash ./basebox/create.sh
 This will run commands from `basebox/bootstrap.sh` on an Ubuntu VM.
 If you're not using vagrant, you can run/adapt that script on a build/development machine of your choice.
 
+If you get the following error:
+
+```
+/home/larsewi/.vagrant.d/gems/3.3.8/gems/vagrant-vbguest-0.32.0/lib/vagrant-vbguest/hosts/virtualbox.rb:84:in `block in guess_local_iso': undefined method `exists?' for class File (NoMethodError)
+
+            path && File.exists?(path)
+                        ^^^^^^^^
+Did you mean?  exist?
+```
+
+Then, the reason is a bug in `vagrant-vbguest` plugin. This is an archived repository.
+So it will not be fixed any time soon. You'd better just fix it yourself. E.g.:
+
+```
+sed -i 's/File.exists/File.exist/g' ~/.vagrant.d/gems/3.3.8/gems/vagrant-vbguest-0.32.0/lib/vagrant-vbguest/hosts/virtualbox.rb
+```
+
 ### Starting the development machine
 
 ```
