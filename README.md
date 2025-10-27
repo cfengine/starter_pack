@@ -177,7 +177,7 @@ Configure the Masterfiles Policy Framework:
 
 ```
 cd ../masterfiles
-./autogen.sh --enable-debug
+./autogen.sh
 ```
 
 ### Installing CFEngine Community on a test machine
