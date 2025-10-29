@@ -40,12 +40,12 @@ apt-get install -y cargo
 apt-get install -y jq
 
 # Nova deps:
-apt-get install -y postgresql-12 postgresql-contrib-12 # libpq-dev pgadmin3
+apt-get install -y postgresql postgresql-contrib # libpq-dev pgadmin3
 apt-get install -y libpgtypes3 libecpg-dev libldap2-dev librsync-dev
 apt-get install -y software-properties-common
 add-apt-repository -y ppa:ondrej/php
 apt-get update -y
-apt-get install -y php7.3-dev
+apt-get install -y php-dev
 
 # mingw cross compile deps:
 apt-get install -y dpkg-dev debhelper g++ libncurses5 pkg-config build-essential libpam0g-dev mingw-w64

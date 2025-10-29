@@ -177,7 +177,7 @@ Configure the Masterfiles Policy Framework:
 
 ```
 cd ../masterfiles
-./autogen.sh --enable-debug
+./autogen.sh
 ```
 
 ### Installing CFEngine Community on a test machine
@@ -287,6 +287,8 @@ Type logout or simply press `CTRL + D` to return to the dev machine:
 ```
 logout
 ```
+
+**Didn't work?** Check out [Troubleshooting](#troubleshooting)
 
 From the dev machine, execute the build-remote script:
 
@@ -492,3 +494,23 @@ the `synced_folder` lines. So something like this:
 -    config.vm.synced_folder ".", "/vagrant",
 +    config.vm.synced_folder ".", "/vagrant", type: "rsync",
 ```
+
+## Troubleshooting
+
+### ssh: connect to host 192.168.56.100 port 22: Protocol not available
+
+If you get the following error when trying to ssh into the buildslave from the dev machine:
+
+```
+ssh: connect to host 192.168.56.100 port 22: Protocol not available
+```
+
+Then I experienced the same issue. Not sure if it was an ARP cache bug or a lingering ghost VM.
+Nevertheless, when I tried to connect, I saw that the ARP cache was updated with a different MAC address then that of the buildslave.
+However, by doing the reverse connection. E.g. (run this command from your host machine):
+
+```
+vagrant ssh buildslave -c "ping -c1 192.168.56.10"
+```
+
+I was able to repopulate the ARP cache with the correct MAC address.
