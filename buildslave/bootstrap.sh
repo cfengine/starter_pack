@@ -55,6 +55,9 @@ cat /vagrant/keys/insecure.pub >> /home/build/.ssh/authorized_keys     # Add ins
 chown build:build /home/build/.ssh/authorized_keys
 chmod 600 /home/build/.ssh/authorized_keys
 
+# Needed for some tests to pass
+useradd cfpostgress
+
 echo ""                                           >> /etc/ssh/sshd_config
 echo "passwordAuthentication no"                  >> /etc/ssh/sshd_config
 echo "AuthorizedKeysFile %h/.ssh/authorized_keys" >> /etc/ssh/sshd_config
