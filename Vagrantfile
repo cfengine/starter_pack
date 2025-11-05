@@ -110,7 +110,7 @@ Vagrant.configure("2") do |config|
                                 rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
         buildslave.vm.synced_folder "#{NTECH_ROOT}", "/northern.tech", disabled: true,
                                 rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
-        buildslave.vm.network "private_network", ip: "192.168.56.100"
+        buildslave.vm.network "private_network", ip: "192.168.56.102"
         buildslave.vm.provider "virtualbox" do |v|
             v.memory = 2048
             v.cpus = 4
