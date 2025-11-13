@@ -243,8 +243,6 @@ The `buildslave` machine is set up specifically for the `build-remote` script.
 This script checks that certain dependencies are installed, while others are not installed, to avoid conflicting dependencies.
 Running `build-remote` from `dev` VM to `buildslave` VM is the easiest.
 
-### Example: mingw cross compile for windows using build-remote
-
 If you haven't already, create the buildslave base box:
 
 ```
@@ -291,6 +289,43 @@ logout
 **Didn't work?** Check out [Troubleshooting](#troubleshooting)
 
 From the dev machine, execute the build-remote script:
+
+```
+bash /northern.tech/buildscripts/build-remote --no-tests --source /northern.tech/ --role hub --verbose build@buildslave
+```
+
+Your build files will appear here:
+
+```
+~/workdir-nova-master-build@buildslave/build/output/nova-master-localbuild/current/--/
+```
+
+You can i.e. copy the deb package to the `/vagrant` directory:
+
+```
+cp workdir-nova-master-build@buildslave/build/output/nova-master-localbuild/current/--/cfengine-nova-hub_*.deb /vagrant/
+```
+
+Login to you hub machine `CTRL + D` followed by:
+
+```
+vagrant ssh hub
+```
+
+Make sure to remove PostgreSQL:
+
+```
+sudo apt purge postgres*
+```
+
+Install with:
+
+```
+mv /vagrant/cfengine-nova-hub_*.deb ~/
+sudo dpkg -i cfengine-nova_3.27.0a.ef005c5af~unknown.ubuntu22_amd64.deb
+```
+
+### Example: mingw cross compile for windows using build-remote
 
 ```
 bash /northern.tech/cfengine/buildscripts/build-remote -c x64-mingw --source /northern.tech/cfengine --verbose build@buildslave

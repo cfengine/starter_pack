@@ -142,6 +142,12 @@ Vagrant.configure("2") do |config|
         hub.vm.hostname = "hub"
         hub.vm.network "private_network", ip: "192.168.56.90"
         hub.vm.network :forwarded_port, guest: 443, host: 9002
+        hub.vm.provider "virtualbox" do |v|
+            v.memory = 4096
+        end
+        hub.vm.provider :libvirt do |v|
+            v.memory = 4096
+        end
     end
 
     # Client test machine:
