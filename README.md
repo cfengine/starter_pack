@@ -133,7 +133,7 @@ Then, the reason is a bug in `vagrant-vbguest` plugin. This is an archived repos
 So it will not be fixed any time soon. You'd better just fix it yourself. E.g.:
 
 ```
-sed -i 's/File.exists/File.exist/g' ~/.vagrant.d/gems/3.3.8/gems/vagrant-vbguest-0.32.0/lib/vagrant-vbguest/hosts/virtualbox.rb
+sed -i.bak 's/File.exists/File.exist/g' ~/.vagrant.d/gems/3.3.8/gems/vagrant-vbguest-0.32.0/lib/vagrant-vbguest/hosts/virtualbox.rb
 ```
 
 ### Starting the development machine
